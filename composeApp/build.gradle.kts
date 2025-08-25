@@ -64,12 +64,12 @@ kotlin {
             implementation(libs.android.wave.recorder)
 
             // Visualization
-            implementation(libs.audiovisualizerview)
+            implementation(libs.compose.audiowaveform)
             implementation(libs.mpandroidchart)
 
             // ML/AI
-            implementation(libs.tensorflow.lite)
-            implementation(libs.tensorflow.lite.audio)
+             implementation(libs.tensorflow.lite)
+             implementation(libs.tensorflow.lite.support)
 
             // UI
             implementation(libs.androidx.ui)
@@ -165,6 +165,17 @@ android {
     compileOptions {
         sourceCompatibility = JavaVersion.VERSION_11
         targetCompatibility = JavaVersion.VERSION_11
+    }
+
+    configurations.all {
+        exclude(group = "com.google.ai.edge.litert")
+
+        // 버전 충돌 해결
+        resolutionStrategy {
+            force("org.tensorflow:tensorflow-lite:2.17.0")
+            force("org.tensorflow:tensorflow-lite-support:0.4.4")
+            force("org.tensorflow:tensorflow-lite-task-audio:0.4.4")
+        }
     }
 }
 

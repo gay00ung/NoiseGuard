@@ -6,14 +6,14 @@ android-minSdk = "24"
 #noinspection OldTargetApi
 android-targetSdk = "35"
 androidDriver = "2.1.0"
-androidWaveRecorder = "1.6.0"
+androidWaveRecorder = "2.1.0"
 androidx-activity = "1.10.1"
 androidx-appcompat = "1.7.1"
 androidx-core = "1.17.0"
 androidx-espresso = "3.7.0"
 androidx-lifecycle = "2.9.2"
 androidx-testExt = "1.3.0"
-audiovisualizerview = "1.0.0"
+audioWaveform = "1.1.1"
 cameraCamera2 = "1.4.2"
 composeMultiplatform = "1.8.2"
 firebaseAnalyticsKtx = "22.5.0"
@@ -34,7 +34,7 @@ multiplatformSettings = "1.3.0"
 napier = "2.7.1"
 playServicesAds = "24.5.0"
 tensorflowLite = "2.17.0"
-tensorflowLiteAudio = "0.4.4"
+tensorflowLiteSupport = "0.5.0"
 ui = "1.9.0"
 workRuntimeKtx = "2.10.3"
 
@@ -46,7 +46,7 @@ androidx-camera-camera2 = { module = "androidx.camera:camera-camera2", version.r
 androidx-material3 = { module = "androidx.compose.material3:material3", version.ref = "material3" }
 androidx-ui = { module = "androidx.compose.ui:ui", version.ref = "ui" }
 androidx-work-runtime-ktx = { module = "androidx.work:work-runtime-ktx", version.ref = "workRuntimeKtx" }
-audiovisualizerview = { module = "com.github.codeestX:AudioVisualizerView", version.ref = "audiovisualizerview" }
+compose-audiowaveform = { module = "com.github.lincollincol:compose-audiowaveform", version.ref = "audioWaveform" }
 coroutines-extensions = { module = "app.cash.sqldelight:coroutines-extensions", version.ref = "androidDriver" }
 firebase-analytics-ktx = { module = "com.google.firebase:firebase-analytics-ktx", version.ref = "firebaseAnalyticsKtx" }
 firebase-crashlytics-ktx = { module = "com.google.firebase:firebase-crashlytics-ktx", version.ref = "firebaseCrashlyticsKtx" }
@@ -76,7 +76,7 @@ native-driver = { module = "app.cash.sqldelight:native-driver", version.ref = "a
 play-services-ads = { module = "com.google.android.gms:play-services-ads", version.ref = "playServicesAds" }
 runtime = { module = "app.cash.sqldelight:runtime", version.ref = "androidDriver" }
 tensorflow-lite = { module = "org.tensorflow:tensorflow-lite", version.ref = "tensorflowLite" }
-tensorflow-lite-audio = { module = "org.tensorflow:tensorflow-lite-audio", version.ref = "tensorflowLiteAudio" }
+tensorflow-lite-support = { module = "org.tensorflow:tensorflow-lite-support", version.ref = "tensorflowLiteSupport" }
 
 [plugins]
 androidApplication = { id = "com.android.application", version.ref = "agp" }
