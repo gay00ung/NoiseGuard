@@ -1,4 +1,3 @@
-import org.jetbrains.compose.desktop.application.dsl.TargetFormat
 import org.jetbrains.kotlin.gradle.ExperimentalKotlinGradlePluginApi
 import org.jetbrains.kotlin.gradle.ExperimentalWasmDsl
 import org.jetbrains.kotlin.gradle.dsl.JvmTarget
@@ -54,6 +53,41 @@ kotlin {
         androidMain.dependencies {
             implementation(compose.preview)
             implementation(libs.androidx.activity.compose)
+
+            // SqlDelight
+            implementation(libs.android.driver)
+
+            // DI
+            implementation(libs.koin.android)
+
+            // Audio Processing
+            implementation(libs.android.wave.recorder)
+
+            // Visualization
+            implementation(libs.audiovisualizerview)
+            implementation(libs.mpandroidchart)
+
+            // ML/AI
+            implementation(libs.tensorflow.lite)
+            implementation(libs.tensorflow.lite.audio)
+
+            // UI
+            implementation(libs.androidx.ui)
+            implementation(libs.androidx.material3)
+            implementation(libs.accompanist.permissions)
+
+            // Camera (for AR features)
+            implementation(libs.androidx.camera.camera2)
+
+            // Work Manager (Background tasks)
+            implementation(libs.androidx.work.runtime.ktx)
+
+            // Ads
+            implementation(libs.play.services.ads)
+
+            // Analytics
+            implementation(libs.firebase.analytics.ktx)
+            implementation(libs.firebase.crashlytics.ktx)
         }
         commonMain.dependencies {
             implementation(compose.runtime)
@@ -64,10 +98,45 @@ kotlin {
             implementation(compose.components.uiToolingPreview)
             implementation(libs.androidx.lifecycle.viewmodelCompose)
             implementation(libs.androidx.lifecycle.runtimeCompose)
+
+            // Coroutines
+            implementation(libs.kotlinx.coroutines.core)
+
+            // DateTime
+            implementation(libs.kotlinx.datetime)
+
+            // Serialization
+            implementation(libs.kotlinx.serialization.json)
+
+            // Database
+            implementation(libs.runtime)
+            implementation(libs.coroutines.extensions)
+
+            // DI
+            implementation(libs.koin.core)
+
+            // Logging
+            implementation(libs.napier)
+
+            // Settings/Preferences
+            implementation(libs.multiplatform.settings)
+
+            // Network
+            implementation(libs.ktor.client.core)
+            implementation(libs.ktor.client.content.negotiation)
+            implementation(libs.ktor.serialization.kotlinx.json)
+        }
+        iosMain.dependencies {
+            // SqlDelight
+            implementation(libs.native.driver)
+
+            // Ktor iOS client
+            implementation(libs.ktor.client.darwin)
         }
         commonTest.dependencies {
             implementation(libs.kotlin.test)
         }
+
     }
 }
 
@@ -78,6 +147,7 @@ android {
     defaultConfig {
         applicationId = "net.lateinit.noiseguard"
         minSdk = libs.versions.android.minSdk.get().toInt()
+        //noinspection OldTargetApi
         targetSdk = libs.versions.android.targetSdk.get().toInt()
         versionCode = 1
         versionName = "1.0"
