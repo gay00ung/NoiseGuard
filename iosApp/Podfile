@@ -1,0 +1,19 @@
+platform :ios, '14.0'
+use_frameworks!
+
+target 'iosApp' do
+    # Charts
+    pod 'DGCharts', '~> 5.1.0'
+
+    # ML
+    pod 'TensorFlowLiteSwift', '~> 2.17.0'
+    pod 'TensorFlowLiteSwift/CoreML', '~> 2.17.0'
+
+    # Firebase
+    pod 'Firebase/Analytics'
+    pod 'Firebase/Crashlytics'
+    pod 'Firebase/Storage'
+
+    # UI Components
+    pod 'lottie-ios', '~> 4.5.2'
+end
