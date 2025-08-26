@@ -28,6 +28,10 @@ kotlin {
             isStatic = true
         }
     }
+
+    compilerOptions {
+        freeCompilerArgs.add("-Xexpect-actual-classes")
+    }
     
     @OptIn(ExperimentalWasmDsl::class)
     wasmJs {
