@@ -1,0 +1,38 @@
+-- 소음 기록 테이블
+CREATE TABLE NoiseRecord (
+    id TEXT PRIMARY KEY,
+    timestamp INTEGER NOT NULL,
+    decibelLevel REAL NOT NULL,
+    averageDb REAL,
+    peakDb REAL,
+    duration INTEGER,
+    location TEXT,
+    noiseType TEXT,
+    audioFilePath TEXT,
+    notes TEXT,
+    createdAt INTEGER DEFAULT CURRENT_TIMESTAMP
+);
+
+-- 일별 통계 테이블
+CREATE TABLE DailyStats (
+    date TEXT PRIMARY KEY,
+    avgDecibel REAL,
+    maxDecibel REAL,
+    violationCount INTEGER,
+    totalMeasurements INTEGER
+);
+
+-- 쿼리들
+selectAll:
+SELECT * FROM NoiseRecord ORDER BY timestamp DESC;
+
+selectByDate:
+SELECT * FROM NoiseRecord
+WHERE date(timestamp/1000, 'unixepoch') = date(:date/1000, 'unixepoch')
+ORDER BY timestamp DESC;
+
+insert:
+INSERT INTO NoiseRecord VALUES ?;
+
+deleteById:
+DELETE FROM NoiseRecord WHERE id = ?;
