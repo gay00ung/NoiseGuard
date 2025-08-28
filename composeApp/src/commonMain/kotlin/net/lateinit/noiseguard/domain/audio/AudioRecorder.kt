@@ -2,6 +2,7 @@ package net.lateinit.noiseguard.domain.audio
 
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.StateFlow
+import net.lateinit.noiseguard.domain.model.NoiseLevel
 
 /**
  * 오디오 녹음 및 데시벨 측정을 위한 멀티플랫폼 인터페이스
@@ -24,17 +25,6 @@ expect class AudioRecorder {
     val noiseLevelFlow: Flow<NoiseLevel>
     val recordingState: StateFlow<RecordingState>
 }
-
-/**
- * 소음 레벨 데이터 클래스
- */
-data class NoiseLevel(
-    val current: Float,
-    val average: Float,
-    val peak: Float,
-    val min: Float = 30f,
-    val timeStamp: Long
-)
 
 /**
  * 녹음 상태

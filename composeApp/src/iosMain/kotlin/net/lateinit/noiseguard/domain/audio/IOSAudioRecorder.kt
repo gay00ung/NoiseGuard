@@ -5,6 +5,8 @@ import platform.AVFAudio.*
 import kotlinx.cinterop.*
 import kotlinx.coroutines.flow.*
 import platform.CoreAudioTypes.kAudioFormatMPEG4AAC
+import net.lateinit.noiseguard.domain.model.NoiseLevel
+import net.lateinit.noiseguard.core.util.getCurrentTimeMillis
 
 actual class AudioRecorder {
     private var audioRecorder: AVAudioRecorder? = null

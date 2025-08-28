@@ -12,6 +12,8 @@ import net.lateinit.noiseguard.presentation.ui.screen.HistoryScreen
 import net.lateinit.noiseguard.presentation.ui.screen.HomeScreen
 import net.lateinit.noiseguard.presentation.ui.screen.RecordingScreen
 import net.lateinit.noiseguard.presentation.ui.screen.SettingsScreen
+import net.lateinit.noiseguard.presentation.viewmodel.HomeViewModel
+import org.koin.compose.viewmodel.koinViewModel
 
 sealed class Screen(val route: String) {
     object Home : Screen("home")
@@ -22,7 +24,9 @@ sealed class Screen(val route: String) {
 }
 
 @Composable
-fun NoiseGuardNavigation() {
+fun NoiseGuardNavigation(
+    homeViewModel: HomeViewModel = koinViewModel()
+) {
     val navController = rememberNavController()
 
     Scaffold(
@@ -37,7 +41,7 @@ fun NoiseGuardNavigation() {
             modifier = Modifier.padding(paddingValues)
         ) {
             composable(Screen.Home.route) {
-                HomeScreen()
+                HomeScreen(homeViewModel)
             }
             composable(Screen.Recording.route) {
                 RecordingScreen()

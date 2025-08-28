@@ -2,6 +2,7 @@ package net.lateinit.noiseguard.domain.audio
 
 import kotlinx.browser.window
 import kotlinx.coroutines.flow.*
+import net.lateinit.noiseguard.domain.model.NoiseLevel
 
 /**
  * Web 플랫폼의 AudioRecorder 구현

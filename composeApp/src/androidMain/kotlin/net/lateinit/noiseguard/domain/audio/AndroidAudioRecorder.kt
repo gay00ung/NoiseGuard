@@ -7,6 +7,7 @@ import android.media.MediaRecorder
 import androidx.annotation.RequiresPermission
 import kotlinx.coroutines.*
 import kotlinx.coroutines.flow.*
+import net.lateinit.noiseguard.domain.model.NoiseLevel
 
 /**
  * Android 플랫폼의 AudioRecorder 구현
@@ -111,8 +112,7 @@ actual class AudioRecorder {
                                     current = currentDb,
                                     average = averageDb,
                                     peak = peakDb,
-                                    min = dbValues.minOrNull() ?: AudioConstants.MIN_DECIBEL,
-                                    timeStamp = currentTime
+                                    timestamp = currentTime
                                 )
                             )
                             lastEmitTime = currentTime
