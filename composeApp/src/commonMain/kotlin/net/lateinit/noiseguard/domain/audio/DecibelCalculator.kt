@@ -98,17 +98,17 @@ object DecibelCalculator {
     /**
      * 데시벨 레벨을 사용자 친화적인 설명으로 변환
      * @param db 데시벨 값
-     * @return 소음 수준 설명
+     * @return 소음 수준 분류
      */
-    fun getNoiseLevel(db: Float): NoiseLevel {
+    fun getNoiseLevelCategory(db: Float): NoiseLevelCategory {
         return when {
-            db < 40 -> NoiseLevel.QUIET
-            db < 50 -> NoiseLevel.MODERATE
-            db < 60 -> NoiseLevel.NORMAL
-            db < 70 -> NoiseLevel.LOUD
-            db < 80 -> NoiseLevel.VERY_LOUD
-            db < 90 -> NoiseLevel.DANGEROUS
-            else -> NoiseLevel.HARMFUL
+            db < 40 -> NoiseLevelCategory.QUIET
+            db < 50 -> NoiseLevelCategory.MODERATE
+            db < 60 -> NoiseLevelCategory.NORMAL
+            db < 70 -> NoiseLevelCategory.LOUD
+            db < 80 -> NoiseLevelCategory.VERY_LOUD
+            db < 90 -> NoiseLevelCategory.DANGEROUS
+            else -> NoiseLevelCategory.HARMFUL
         }
     }
     
@@ -145,9 +145,9 @@ object AudioConstants {
 }
 
 /**
- * 소음 수준 열거형
+ * 소음 수준 분류 열거형
  */
-enum class NoiseLevel(val description: String, val koreanDesc: String) {
+enum class NoiseLevelCategory(val description: String, val koreanDesc: String) {
     QUIET("Quiet", "조용함"),
     MODERATE("Moderate", "보통"),
     NORMAL("Normal", "일상적"),
