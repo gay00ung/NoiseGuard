@@ -1,18 +1,28 @@
-package net.lateinit.noiseguard
+package net.lateinit.noiseguard.domain.audio
 
 import platform.Foundation.*
 import platform.AVFAudio.*
 import kotlinx.cinterop.*
+import kotlinx.coroutines.flow.*
 import platform.CoreAudioTypes.kAudioFormatMPEG4AAC
 
 actual class AudioRecorder {
     private var audioRecorder: AVAudioRecorder? = null
     private val audioSession = AVAudioSession.sharedInstance()
 
-    private var currentDb = -160.0f
+    private var currentDb = AudioConstants.MIN_DECIBEL
     private var dbValues = mutableListOf<Float>()
-    private var peakDb = -160.0f
-    private var isRecordingFlag = false
+    private var peakDb = AudioConstants.MIN_DECIBEL
+    
+    // Flow 구현
+    private val _decibelFlow = MutableSharedFlow<Float>(replay = 1)
+    actual val decibelFlow: Flow<Float> = _decibelFlow.asSharedFlow()
+    
+    private val _noiseLevelFlow = MutableSharedFlow<NoiseLevel>(replay = 1)
+    actual val noiseLevelFlow: Flow<NoiseLevel> = _noiseLevelFlow.asSharedFlow()
+    
+    private val _recordingState = MutableStateFlow(RecordingState.IDLE)
+    actual val recordingState: StateFlow<RecordingState> = _recordingState.asStateFlow()
 
     init {
         setupAudioSession()
@@ -54,7 +64,7 @@ actual class AudioRecorder {
         audioRecorder?.apply {
             setMeteringEnabled(true)
             record()
-            isRecordingFlag = true
+            _recordingState.value = RecordingState.RECORDING
 
             // 모니터링 시작
             startMetering()
@@ -62,10 +72,25 @@ actual class AudioRecorder {
     }
 
     actual fun stopRecording() {
-        isRecordingFlag = false
+        _recordingState.value = RecordingState.IDLE
         audioRecorder?.stop()
         audioRecorder = null
         dbValues.clear()
+        _decibelFlow.tryEmit(AudioConstants.MIN_DECIBEL)
+    }
+    
+    actual fun pauseRecording() {
+        if (_recordingState.value == RecordingState.RECORDING) {
+            _recordingState.value = RecordingState.PAUSED
+            audioRecorder?.pause()
+        }
+    }
+    
+    actual fun resumeRecording() {
+        if (_recordingState.value == RecordingState.PAUSED) {
+            audioRecorder?.record()
+            _recordingState.value = RecordingState.RECORDING
+        }
     }
 
     actual fun getDecibelLevel(): Float {
@@ -75,7 +100,7 @@ actual class AudioRecorder {
         return currentDb
     }
 
-    actual fun isRecording(): Boolean = isRecordingFlag
+    actual fun isRecording(): Boolean = _recordingState.value == RecordingState.RECORDING
 
     actual fun getAverageDecibelLevel(): Float {
         if (dbValues.isEmpty()) return -160.0f
@@ -90,7 +115,7 @@ actual class AudioRecorder {
             interval = 0.1,
             repeats = true
         ) { timer ->
-            if (!isRecordingFlag) {
+            if (_recordingState.value != RecordingState.RECORDING) {
                 timer?.invalidate()
                 return@scheduledTimerWithTimeInterval
             }
