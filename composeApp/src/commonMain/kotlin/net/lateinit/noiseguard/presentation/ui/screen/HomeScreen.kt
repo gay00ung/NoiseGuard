@@ -19,7 +19,6 @@ import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
-import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
@@ -72,8 +71,8 @@ import net.lateinit.noiseguard.presentation.ui.component.FloatingParticles
 import net.lateinit.noiseguard.presentation.ui.component.MiniWaveform
 import net.lateinit.noiseguard.presentation.ui.component.ModernBottomBar
 import net.lateinit.noiseguard.presentation.ui.component.PulsingDot
-import net.lateinit.noiseguard.presentation.ui.component.StatWidget
 import net.lateinit.noiseguard.presentation.ui.component.RealtimeGraph
+import net.lateinit.noiseguard.presentation.ui.component.StatWidget
 import net.lateinit.noiseguard.presentation.ui.component.getNoiseColor
 import net.lateinit.noiseguard.presentation.viewmodel.HomeViewModel
 
