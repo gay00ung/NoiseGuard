@@ -1,7 +1,6 @@
 package net.lateinit.noiseguard.core.di
 
 import net.lateinit.noiseguard.presentation.viewmodel.HomeViewModel
-import org.koin.core.module.dsl.factoryOf
 import org.koin.dsl.module
 
 val dataModule = module {
@@ -27,7 +26,7 @@ val domainModule = module {
 
 val presentationModule = module {
     // ViewModels
-    factoryOf(::HomeViewModel)
+    factory { HomeViewModel(get()) }
     // factoryOf(::RecordingViewModel)
     // factoryOf(::HistoryViewModel)
     // factoryOf(::AnalysisViewModel)

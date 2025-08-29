@@ -10,8 +10,11 @@ import net.lateinit.noiseguard.core.util.getCurrentTimeMillis
 import net.lateinit.noiseguard.domain.audio.AudioRecorderFactory
 import net.lateinit.noiseguard.domain.audio.RecordingState
 import net.lateinit.noiseguard.domain.model.NoiseLevel
+import net.lateinit.noiseguard.domain.permission.PermissionHandler
 
-class HomeViewModel : ViewModel() {
+class HomeViewModel(
+    private val permissionHandler: PermissionHandler
+) : ViewModel() {
     private val audioRecorder = AudioRecorderFactory.createAudioRecorder()
     
     // 실시간 데시벨 Flow를 StateFlow로 변환
@@ -65,6 +68,16 @@ class HomeViewModel : ViewModel() {
     // 녹음 시작/중지 토글
     fun toggleRecording() {
         viewModelScope.launch {
+            // 권한 체크
+            if (!permissionHandler.hasAudioPermission()) {
+                val granted = permissionHandler.requestAudioPermission()
+                if (!granted) {
+                    // 권한 거부됨
+                    println("❌ 오디오 녹음 권한이 필요합니다")
+                    return@launch
+                }
+            }
+            
             when (recordingState.value) {
                 RecordingState.IDLE -> {
                     audioRecorder.startRecording()
