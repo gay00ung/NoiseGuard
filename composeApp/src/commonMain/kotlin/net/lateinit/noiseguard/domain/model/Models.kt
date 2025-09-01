@@ -29,7 +29,7 @@ data class NoiseRecord(
 )
 
 enum class NoiseType {
-    FOOTSTEP, HAMMERING, DRAGGING, JUMPING, MUSIC, TALKING, UNKNOWN
+    FOOTSTEP, HAMMERING, DRAGGING, MUSIC, TALKING, DOOR, WATER, UNKNOWN
 }
 
 enum class NoiseStatus(val minDb: Float, val color: Color, val label: String) {

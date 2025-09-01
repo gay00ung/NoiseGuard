@@ -102,6 +102,9 @@ kotlin {
             // Analytics
             implementation(libs.firebase.analytics.ktx)
             implementation(libs.firebase.crashlytics.ktx)
+
+            // TFLite Task Audio Library
+            implementation(libs.tensorflow.lite.task.audio)
         }
         commonMain.dependencies {
             implementation(compose.runtime)

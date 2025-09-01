@@ -38,6 +38,7 @@ playServicesAds = "24.5.0"
 sqldelight = "2.1.0"
 tensorflowLite = "2.17.0"
 tensorflowLiteSupport = "0.5.0"
+tensorflowLiteTaskAudio = "0.4.4"
 ui = "1.9.0"
 workRuntimeKtx = "2.10.3"
 
@@ -83,6 +84,7 @@ play-services-ads = { module = "com.google.android.gms:play-services-ads", versi
 runtime = { module = "app.cash.sqldelight:runtime", version.ref = "androidDriver" }
 tensorflow-lite = { module = "org.tensorflow:tensorflow-lite", version.ref = "tensorflowLite" }
 tensorflow-lite-support = { module = "org.tensorflow:tensorflow-lite-support", version.ref = "tensorflowLiteSupport" }
+tensorflow-lite-task-audio = { module = "org.tensorflow:tensorflow-lite-task-audio", version.ref = "tensorflowLiteTaskAudio" }
 
 [plugins]
 androidApplication = { id = "com.android.application", version.ref = "agp" }
