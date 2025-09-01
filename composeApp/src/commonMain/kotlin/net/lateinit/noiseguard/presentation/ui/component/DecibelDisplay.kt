@@ -37,11 +37,11 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.draw.blur
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.draw.scale
 import androidx.compose.ui.draw.shadow
 import androidx.compose.ui.geometry.Offset
+import androidx.compose.ui.geometry.Size
 import androidx.compose.ui.graphics.Brush
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.StrokeCap
@@ -111,7 +111,6 @@ fun DecibelDisplay(
                     )
                 )
             )
-            .blur(radius = 0.5.dp)
             .shadow(
                 elevation = 20.dp,
                 shape = RoundedCornerShape(32.dp),
@@ -156,7 +155,7 @@ fun DecibelDisplay(
             ) {
                 // Current dB value
                 AnimatedContent(
-                    targetState = animatedDb.toInt(),
+                    targetState = currentDb.toInt(),
                     transitionSpec = {
                         slideInVertically { it } + fadeIn() togetherWith
                                 slideOutVertically { -it } + fadeOut()
@@ -168,7 +167,7 @@ fun DecibelDisplay(
                         style = MaterialTheme.typography.displayLarge.copy(
                             fontSize = 72.sp,
                             fontWeight = FontWeight.Thin,
-                            letterSpacing = (-2).sp
+                            letterSpacing = 0.sp
                         ),
                         color = MaterialTheme.colorScheme.onSurface
                     )
@@ -240,7 +239,7 @@ private fun CircularDecibelIndicator(
                 (size.width - radius * 2) / 2,
                 (size.height - radius * 2) / 2
             ),
-            size = androidx.compose.ui.geometry.Size(radius * 2, radius * 2)
+            size = Size(radius * 2, radius * 2)
         )
 
         // Progress arc
@@ -264,7 +263,7 @@ private fun CircularDecibelIndicator(
                     (size.width - radius * 2) / 2,
                     (size.height - radius * 2) / 2
                 ),
-                size = androidx.compose.ui.geometry.Size(radius * 2, radius * 2)
+                size = Size(radius * 2, radius * 2)
             )
         }
 

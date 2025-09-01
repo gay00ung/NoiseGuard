@@ -29,7 +29,6 @@ import androidx.compose.runtime.getValue
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.draw.blur
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.draw.scale
 import androidx.compose.ui.draw.shadow
@@ -50,6 +49,7 @@ import net.lateinit.noiseguard.domain.model.NoiseStatus
 import net.lateinit.noiseguard.presentation.theme.NoiseGuardTheme
 import org.jetbrains.compose.ui.tooling.preview.Preview
 import kotlin.math.sin
+import kotlin.random.Random
 
 @Composable
 fun RealtimeGraph(
@@ -87,7 +87,6 @@ fun RealtimeGraph(
                     )
                 )
             )
-            .blur(radius = 0.5.dp)
             .shadow(
                 elevation = 8.dp,
                 shape = RoundedCornerShape(24.dp)
@@ -152,8 +151,9 @@ fun RealtimeGraph(
             val path = Path()
             val gradientPath = Path()
 
+            val denom = maxOf(dataAnimations.size - 1, 1)
             dataAnimations.forEachIndexed { index, value ->
-                val x = (index.toFloat() / (dataAnimations.size - 1)) * width
+                val x = (index.toFloat() / denom) * width
                 val y = height - ((value - minValue) / (maxValue - minValue)) * height
 
                 if (index == 0) {
@@ -162,7 +162,7 @@ fun RealtimeGraph(
                     gradientPath.lineTo(x, y)
                 } else {
                     // Smooth curve using quadratic bezier
-                    val prevX = ((index - 1).toFloat() / (dataAnimations.size - 1)) * width
+                    val prevX = ((index - 1).toFloat() / denom) * width
                     val prevY =
                         height - ((dataAnimations[index - 1] - minValue) / (maxValue - minValue)) * height
 
@@ -299,7 +299,7 @@ private fun createSampleGraphData(): List<NoiseLevel> {
     return (0..19).map { index ->
         val time = baseTime - (19 - index) * 1000L
         val noise =
-            30f + sin(index * 0.3f) * 15f + (index % 3) * 5f + kotlin.random.Random.nextFloat() * 8f
+            30f + sin(index * 0.3f) * 15f + (index % 3) * 5f + Random.nextFloat() * 8f
         NoiseLevel(
             current = noise,
             average = noise * 0.8f,
@@ -350,7 +350,7 @@ fun RealtimeGraphHighNoisePreview() {
             val highNoiseData = (0..19).map { index ->
                 val baseTime = getCurrentTimeMillis()
                 val time = baseTime - (19 - index) * 1000L
-                val noise = 70f + sin(index * 0.4f) * 20f + kotlin.random.Random.nextFloat() * 10f
+                val noise = 70f + sin(index * 0.4f) * 20f + Random.nextFloat() * 10f
                 NoiseLevel(
                     current = noise.coerceIn(50f, 95f),
                     average = noise * 0.8f,

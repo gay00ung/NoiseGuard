@@ -10,8 +10,10 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.geometry.Offset
+import androidx.compose.ui.geometry.Size
 import net.lateinit.noiseguard.presentation.theme.Primary700
 import org.jetbrains.compose.ui.tooling.preview.Preview
+import kotlin.math.sin
 
 @Composable
 fun MiniWaveform(modifier: Modifier = Modifier) {
@@ -30,11 +32,11 @@ fun MiniWaveform(modifier: Modifier = Modifier) {
 
         for (i in 0 until barCount) {
             val height =
-                size.height * (0.3f + 0.7f * kotlin.math.sin((i + phase * barCount) * 0.5f))
+                size.height * (0.3f + 0.7f * sin((i + phase * barCount) * 0.5f))
             drawRect(
                 color = Primary700.copy(alpha = 0.6f),
                 topLeft = Offset(i * barWidth * 2, (size.height - height) / 2),
-                size = androidx.compose.ui.geometry.Size(barWidth, height)
+                size = Size(barWidth, height)
             )
         }
     }

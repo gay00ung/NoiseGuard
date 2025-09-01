@@ -42,7 +42,9 @@ import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateListOf
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
@@ -86,13 +88,20 @@ fun HomeScreen(
     val noiseLevel by viewModel.noiseLevel.collectAsStateWithLifecycle()
     var selectedTab by remember { mutableStateOf(0) }
     
-    // 그래프를 위한 데이터 누적
-    val noiseLevelHistory = remember { mutableListOf<NoiseLevel>() }
-    if (recordingState == RecordingState.RECORDING) {
-        noiseLevelHistory.add(noiseLevel)
-        // 최대 50개만 유지
-        if (noiseLevelHistory.size > 50) {
-            noiseLevelHistory.removeAt(0)
+    val noiseLevelHistory = remember { mutableStateListOf<NoiseLevel>() }
+
+    LaunchedEffect(recordingState) {
+        if (recordingState != RecordingState.RECORDING) {
+            noiseLevelHistory.clear()
+        }
+    }
+
+    LaunchedEffect(noiseLevel.timestamp, recordingState) {
+        if (recordingState == RecordingState.RECORDING) {
+            noiseLevelHistory.add(noiseLevel)
+            if (noiseLevelHistory.size > 50) {
+                noiseLevelHistory.removeAt(0)
+            }
         }
     }
 
@@ -432,4 +441,3 @@ private fun ControlCenterSection(
         }
     }
 }
-
