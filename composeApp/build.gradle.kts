@@ -149,7 +149,7 @@ kotlin {
             implementation(libs.ktor.serialization.kotlinx.json)
 
             // Navigation
-            implementation(libs.androidx.navigation.compose)
+            implementation(libs.navigation.compose)
         }
         iosMain.dependencies {
             // SqlDelight
