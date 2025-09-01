@@ -1,5 +1,7 @@
 package net.lateinit.noiseguard.core.di
 
+import net.lateinit.noiseguard.data.ml.NoiseClassifier
+import net.lateinit.noiseguard.data.ml.NoiseClassifierApi
 import net.lateinit.noiseguard.domain.permission.PermissionHandler
 import org.koin.android.ext.koin.androidContext
 import org.koin.dsl.module
@@ -10,4 +12,7 @@ import org.koin.dsl.module
 val androidPlatformModule = module {
     // 권한 처리
     single { PermissionHandler(androidContext()) }
+
+    // Android: 실제 분류기 바인딩
+    single<NoiseClassifierApi> { NoiseClassifier(androidContext()) }
 }

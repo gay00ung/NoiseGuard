@@ -2,6 +2,8 @@ package net.lateinit.noiseguard.presentation.viewmodel
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.stateIn
@@ -10,10 +12,15 @@ import net.lateinit.noiseguard.core.util.getCurrentTimeMillis
 import net.lateinit.noiseguard.domain.audio.AudioRecorderFactory
 import net.lateinit.noiseguard.domain.audio.RecordingState
 import net.lateinit.noiseguard.domain.model.NoiseLevel
+import net.lateinit.noiseguard.domain.model.NoiseType
 import net.lateinit.noiseguard.domain.permission.PermissionHandler
+import net.lateinit.noiseguard.domain.usecase.ClassifyNoiseTypeUseCase
+import net.lateinit.noiseguard.data.ml.NoiseClassifierApi
 
 class HomeViewModel(
-    private val permissionHandler: PermissionHandler
+    private val permissionHandler: PermissionHandler,
+    private val noiseClassifier: NoiseClassifierApi,
+    private val classifyNoiseType: ClassifyNoiseTypeUseCase
 ) : ViewModel() {
     private val audioRecorder = AudioRecorderFactory.createAudioRecorder()
     
@@ -40,7 +47,28 @@ class HomeViewModel(
                 timestamp = getCurrentTimeMillis()
             )
         )
-    
+
+    private val _noiseType = MutableStateFlow(NoiseType.UNKNOWN)
+    val noiseType: StateFlow<NoiseType> = _noiseType
+
+    private var classifierInitialized = false
+    private var classificationRunning = false
+
+    init {
+        viewModelScope.launch(Dispatchers.Default) {
+            runCatching { noiseClassifier.initialize() }
+                .onSuccess { classifierInitialized = true }
+        }
+        viewModelScope.launch {
+            recordingState.collect { state ->
+                when (state) {
+                    RecordingState.RECORDING -> startClassificationIfNeeded()
+                    else -> stopClassificationIfRunning()
+                }
+            }
+        }
+    }
+
     // 녹음 시작
     fun startRecording() {
         viewModelScope.launch {
@@ -95,7 +123,24 @@ class HomeViewModel(
             }
         }
     }
-    
+
+    private fun startClassificationIfNeeded() {
+        if (!classifierInitialized || classificationRunning) return
+        classificationRunning = true
+        noiseClassifier.startRecordingAndClassifying { labels ->
+            val type = classifyNoiseType(labels)
+            viewModelScope.launch { _noiseType.emit(type) }
+        }
+    }
+
+    private fun stopClassificationIfRunning() {
+        if (!classificationRunning) return
+        classificationRunning = false
+        noiseClassifier.stopRecording()
+        _noiseType.value = NoiseType.UNKNOWN
+    }
+
+
     override fun onCleared() {
         super.onCleared()
         // ViewModel이 정리될 때 녹음 중지

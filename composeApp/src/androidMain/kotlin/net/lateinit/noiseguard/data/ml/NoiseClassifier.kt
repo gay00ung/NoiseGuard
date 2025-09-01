@@ -12,12 +12,12 @@ class NoiseClassifier(
     private val context: Context,
     private val modelPath: String = "yamnet.tflite",
     private val minScore: Float = 0.3f,
-) {
+) : NoiseClassifierApi {
     private lateinit var classifier: AudioClassifier
     private lateinit var audioRecord: AudioRecord
     private lateinit var audioTensor: TensorAudio
 
-    fun initialize() {
+    override fun initialize() {
         val baseOptions = BaseOptions.builder().setNumThreads(4).build()
         val options = AudioClassifier.AudioClassifierOptions.builder()
             .setBaseOptions(baseOptions)
@@ -28,7 +28,7 @@ class NoiseClassifier(
         classifier = AudioClassifier.createFromFileAndOptions(context, modelPath, options)
     }
 
-    fun startRecordingAndClassifying(onResult: (List<String>) -> Unit) {
+    override fun startRecordingAndClassifying(onResult: (List<String>) -> Unit) {
         // Task Library에서 제공하는 유틸리티로 AudioRecord와 TensorAudio 생성
         audioTensor = classifier.createInputTensorAudio()
         audioRecord = classifier.createAudioRecord()
@@ -54,7 +54,7 @@ class NoiseClassifier(
         }, 0, classificationInterval, TimeUnit.MILLISECONDS)
     }
 
-    fun stopRecording() {
+    override fun stopRecording() {
         if (this::audioRecord.isInitialized) {
             audioRecord.stop()
         }

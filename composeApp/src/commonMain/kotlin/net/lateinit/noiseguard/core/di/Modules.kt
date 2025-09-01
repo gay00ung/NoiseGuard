@@ -1,5 +1,6 @@
 package net.lateinit.noiseguard.core.di
 
+import net.lateinit.noiseguard.domain.usecase.ClassifyNoiseTypeUseCase
 import net.lateinit.noiseguard.presentation.viewmodel.HomeViewModel
 import org.koin.dsl.module
 
@@ -15,18 +16,12 @@ val dataModule = module {
 
 val domainModule = module {
     // UseCases
-    // factoryOf(::StartRecordingUseCase)
-    // factoryOf(::StopRecordingUseCase)
-    // factoryOf(::GetNoiseLevelsUseCase)
-    // factoryOf(::GetRecordsUseCase)
-    // factoryOf(::SaveRecordUseCase)
-    // factoryOf(::DeleteRecordUseCase)
-    // factoryOf(::AnalyzeNoiseUseCase)
+    single { ClassifyNoiseTypeUseCase() }
 }
 
 val presentationModule = module {
     // ViewModels
-    factory { HomeViewModel(get()) }
+    factory { HomeViewModel(get(), get(), get()) }
     // factoryOf(::RecordingViewModel)
     // factoryOf(::HistoryViewModel)
     // factoryOf(::AnalysisViewModel)

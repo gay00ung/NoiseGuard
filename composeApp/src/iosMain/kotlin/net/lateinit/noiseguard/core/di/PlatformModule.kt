@@ -1,5 +1,7 @@
 package net.lateinit.noiseguard.core.di
 
+import net.lateinit.noiseguard.data.ml.NoiseClassifierApi
+import net.lateinit.noiseguard.data.ml.NoopNoiseClassifier
 import net.lateinit.noiseguard.domain.permission.PermissionHandler
 import org.koin.dsl.module
 
@@ -9,4 +11,7 @@ import org.koin.dsl.module
 val iosPlatformModule = module {
     // 권한 처리
     single { PermissionHandler() }
+
+    // iOS: No-op 분류기 바인딩
+    single<NoiseClassifierApi> { NoopNoiseClassifier() }
 }
