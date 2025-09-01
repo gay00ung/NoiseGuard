@@ -36,7 +36,7 @@ enum class NoiseStatus(val minDb: Float, val color: Color, val label: String) {
     SAFE(0f, Safe, "안전"),
     CAUTION(40f, Warning, "주의"),
     WARNING(50f, Caution, "경고"),
-    DANGER(60f, Danger, "위험");
+    DANGER(57f, Danger, "위험");
 
     companion object {
         fun fromDecibel(db: Float) = NoiseStatus.entries.toTypedArray().lastOrNull { db >= it.minDb } ?: SAFE

@@ -86,8 +86,9 @@ fun HomeScreen(
     val currentDecibel by viewModel.currentDecibel.collectAsStateWithLifecycle()
     val recordingState by viewModel.recordingState.collectAsStateWithLifecycle()
     val noiseLevel by viewModel.noiseLevel.collectAsStateWithLifecycle()
+    val noiseType by viewModel.noiseType.collectAsStateWithLifecycle()
     var selectedTab by remember { mutableStateOf(0) }
-    
+
     val noiseLevelHistory = remember { mutableStateListOf<NoiseLevel>() }
 
     LaunchedEffect(recordingState) {
@@ -161,6 +162,7 @@ fun HomeScreen(
                     DecibelDisplay(
                         noiseLevel = noiseLevel,
                         isRecording = recordingState == RecordingState.RECORDING,
+                        noiseType = noiseType,
                         modifier = Modifier.animateContentSize()
                     )
                 }
@@ -239,6 +241,8 @@ fun HomeScreen(
         }
     }
 }
+
+// noise type label mapping now handled in DecibelDisplay
 
 @Composable
 private fun DynamicIslandTopBar(

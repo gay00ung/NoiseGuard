@@ -1,6 +1,7 @@
 package net.lateinit.noiseguard.presentation.ui.component
 
 import androidx.compose.animation.AnimatedContent
+import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.animation.core.FastOutSlowInEasing
 import androidx.compose.animation.core.LinearEasing
 import androidx.compose.animation.core.RepeatMode
@@ -26,11 +27,13 @@ import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
+import androidx.compose.foundation.layout.offset
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.Icon
 import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
@@ -52,17 +55,21 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import net.lateinit.noiseguard.core.util.getCurrentTimeMillis
 import net.lateinit.noiseguard.domain.model.NoiseLevel
+import net.lateinit.noiseguard.domain.model.NoiseType
 import net.lateinit.noiseguard.domain.model.NoiseStatus
 import net.lateinit.noiseguard.presentation.theme.NoiseGuardTheme
 import org.jetbrains.compose.ui.tooling.preview.Preview
 import kotlin.math.PI
 import kotlin.math.cos
 import kotlin.math.sin
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.Headset
 
 @Composable
 fun DecibelDisplay(
     noiseLevel: NoiseLevel?,
     isRecording: Boolean,
+    noiseType: NoiseType = NoiseType.UNKNOWN,
     modifier: Modifier = Modifier
 ) {
     val currentDb = noiseLevel?.current ?: 0f
@@ -198,20 +205,61 @@ fun DecibelDisplay(
                         modifier = Modifier.padding(horizontal = 16.dp, vertical = 6.dp)
                     )
                 }
+                
             }
         }
 
         // Recording indicator
         if (isRecording) {
-            Box(
+            Row(
                 modifier = Modifier
                     .align(Alignment.TopEnd)
-                    .padding(24.dp)
+                    .padding(top = 10.dp, end = 16.dp)
+                    .offset(y = (-2).dp),
+                verticalAlignment = Alignment.CenterVertically,
+                horizontalArrangement = Arrangement.spacedBy(8.dp)
             ) {
+                AnimatedVisibility(visible = noiseType != NoiseType.UNKNOWN) {
+                    Surface(
+                        shape = RoundedCornerShape(14.dp),
+                        color = status.color.copy(alpha = 0.15f)
+                    ) {
+                        Row(
+                            verticalAlignment = Alignment.CenterVertically,
+                            horizontalArrangement = Arrangement.spacedBy(6.dp),
+                            modifier = Modifier.padding(horizontal = 10.dp, vertical = 4.dp)
+                        ) {
+                            Icon(
+                                imageVector = Icons.Filled.Headset,
+                                contentDescription = null,
+                                tint = status.color,
+                                modifier = Modifier.size(16.dp)
+                            )
+                            Text(
+                                text = noiseType.toKoreanLabel(),
+                                style = MaterialTheme.typography.labelSmall.copy(
+                                    fontWeight = FontWeight.Medium
+                                ),
+                                color = status.color
+                            )
+                        }
+                    }
+                }
                 RecordingIndicator()
             }
         }
     }
+}
+
+private fun NoiseType.toKoreanLabel(): String = when (this) {
+    NoiseType.FOOTSTEP -> "발소리"
+    NoiseType.HAMMERING -> "망치/충격음"
+    NoiseType.DRAGGING -> "끌리는 소리"
+    NoiseType.MUSIC -> "음악"
+    NoiseType.TALKING -> "대화/말소리"
+    NoiseType.DOOR -> "문 소리"
+    NoiseType.WATER -> "물 소리"
+    NoiseType.UNKNOWN -> "알 수 없음"
 }
 
 @Composable
@@ -331,6 +379,7 @@ fun DecibelDisplayPreview() {
                     timestamp = getCurrentTimeMillis()
                 ),
                 isRecording = false,
+                noiseType = NoiseType.UNKNOWN,
                 modifier = Modifier.padding(16.dp)
             )
         }
@@ -350,6 +399,7 @@ fun DecibelDisplayRecordingPreview() {
                     timestamp = getCurrentTimeMillis()
                 ),
                 isRecording = true,
+                noiseType = NoiseType.MUSIC,
                 modifier = Modifier.padding(16.dp)
             )
         }
@@ -369,6 +419,7 @@ fun DecibelDisplayHighNoisePreview() {
                     timestamp = getCurrentTimeMillis()
                 ),
                 isRecording = true,
+                noiseType = NoiseType.HAMMERING,
                 modifier = Modifier.padding(16.dp)
             )
         }
@@ -383,6 +434,7 @@ fun DecibelDisplayEmptyPreview() {
             DecibelDisplay(
                 noiseLevel = null,
                 isRecording = false,
+                noiseType = NoiseType.UNKNOWN,
                 modifier = Modifier.padding(16.dp)
             )
         }
