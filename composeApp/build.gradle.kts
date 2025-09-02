@@ -67,6 +67,7 @@ kotlin {
         androidMain.dependencies {
             implementation(compose.preview)
             implementation(libs.androidx.activity.compose)
+            implementation(compose.components.resources)
 
             // SqlDelight
             implementation(libs.android.driver)
@@ -81,10 +82,15 @@ kotlin {
             implementation(libs.compose.audiowaveform)
             implementation(libs.mpandroidchart)
 
-            // ML/AI
-             implementation(libs.tensorflow.lite)
-             implementation(libs.tensorflow.lite.support)
-
+            // ML/AI (MediaPipe Tasks Audio)
+            implementation("com.google.mediapipe:tasks-audio:0.10.26.1") {
+                version { strictly("0.10.26.1") }
+            }
+            implementation("com.google.mediapipe:tasks-core:0.10.26.1") {
+                version { strictly("0.10.26.1") }
+            }
+            // Optional: LiteRT runtime (for newer runtime and 16KB support)
+            implementation(libs.litert)
             // UI
             implementation(libs.androidx.ui)
             implementation(libs.androidx.material3)
@@ -103,8 +109,7 @@ kotlin {
             implementation(libs.firebase.analytics.ktx)
             implementation(libs.firebase.crashlytics.ktx)
 
-            // TFLite Task Audio Library
-            implementation(libs.tensorflow.lite.task.audio)
+            // TFLite Task Audio removed (replaced by MediaPipe Tasks)
         }
         commonMain.dependencies {
             implementation(compose.runtime)
@@ -152,6 +157,8 @@ kotlin {
             implementation(libs.navigation.compose)
         }
         iosMain.dependencies {
+            implementation(compose.components.resources)
+
             // SqlDelight
             implementation(libs.native.driver)
 
@@ -193,14 +200,7 @@ android {
     }
 
     configurations.all {
-        exclude(group = "com.google.ai.edge.litert")
-
-        // 버전 충돌 해결
-        resolutionStrategy {
-            force("org.tensorflow:tensorflow-lite:2.17.0")
-            force("org.tensorflow:tensorflow-lite-support:0.4.4")
-            force("org.tensorflow:tensorflow-lite-task-audio:0.4.4")
-        }
+        // Removed excludes/forces to allow modern runtime and 16KB-compatible artifacts
     }
 }
 

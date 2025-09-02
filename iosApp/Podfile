@@ -16,4 +16,9 @@ target 'iosApp' do
 
     # UI Components
     pod 'lottie-ios', '~> 4.5.2'
+
+    # TensorFlowLiteSwift
+    pod 'TensorFlowLiteSwift', '~> 2.17.0'
+    pod 'TensorFlowLiteTaskAudio', '~> 0.4.3'
+
 end

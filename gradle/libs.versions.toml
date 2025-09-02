@@ -30,7 +30,9 @@ playServicesAds = "24.5.0"
 sqldelight = "2.1.0"
 tensorflowLite = "2.17.0"
 tensorflowLiteSupport = "0.5.0"
-tensorflowLiteTaskAudio = "0.4.4"
+tensorflowLiteTaskAudio = "0.4.4" # unused after migration, kept for reference
+mediapipeTasksAudio = "0.20230731"
+litert = "1.4.0"
 ui = "1.9.0"
 workRuntimeKtx = "2.10.3"
 
@@ -69,8 +71,10 @@ play-services-ads = { module = "com.google.android.gms:play-services-ads", versi
 runtime = { module = "app.cash.sqldelight:runtime", version.ref = "androidDriver" }
 tensorflow-lite = { module = "org.tensorflow:tensorflow-lite", version.ref = "tensorflowLite" }
 tensorflow-lite-support = { module = "org.tensorflow:tensorflow-lite-support", version.ref = "tensorflowLiteSupport" }
-#noinspection Aligned16KB
+# TFLite Task Audio kept for reference, no longer used
 tensorflow-lite-task-audio = { module = "org.tensorflow:tensorflow-lite-task-audio", version.ref = "tensorflowLiteTaskAudio" }
+mediapipe-tasks-audio = { module = "com.google.mediapipe:tasks-audio", version.ref = "mediapipeTasksAudio" }
+litert = { module = "com.google.ai.edge.litert:litert", version.ref = "litert" }
 
 [plugins]
 androidApplication = { id = "com.android.application", version.ref = "agp" }
