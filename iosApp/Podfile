@@ -5,9 +5,8 @@ target 'iosApp' do
     # Charts
     pod 'DGCharts', '~> 5.1.0'
 
-    # ML
-    pod 'TensorFlowLiteSwift', '~> 2.17.0'
-    pod 'TensorFlowLiteSwift/CoreML', '~> 2.17.0'
+    # ML (align versions for TaskAudio 0.4.3)
+    pod 'TensorFlowLiteSwift', '~> 2.12.0'
 
     # Firebase
     pod 'Firebase/Analytics'
@@ -17,8 +16,7 @@ target 'iosApp' do
     # UI Components
     pod 'lottie-ios', '~> 4.5.2'
 
-    # TensorFlowLiteSwift
-    pod 'TensorFlowLiteSwift', '~> 2.17.0'
+    # TensorFlow Lite Task Audio (CocoaPods latest is 0.4.3)
     pod 'TensorFlowLiteTaskAudio', '~> 0.4.3'
 
 end
