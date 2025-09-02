@@ -219,7 +219,7 @@ fun DecibelDisplay(
                 verticalAlignment = Alignment.CenterVertically,
                 horizontalArrangement = Arrangement.spacedBy(8.dp)
             ) {
-                AnimatedVisibility(visible = noiseType != NoiseType.UNKNOWN) {
+                AnimatedVisibility(visible = true) {
                     Surface(
                         shape = RoundedCornerShape(14.dp),
                         color = status.color.copy(alpha = 0.15f)
@@ -259,7 +259,7 @@ private fun NoiseType.toKoreanLabel(): String = when (this) {
     NoiseType.TALKING -> "대화/말소리"
     NoiseType.DOOR -> "문 소리"
     NoiseType.WATER -> "물 소리"
-    NoiseType.UNKNOWN -> "알 수 없음"
+    NoiseType.UNKNOWN -> "판정 중"
 }
 
 @Composable
