@@ -56,8 +56,18 @@ class HomeViewModel(
 
     init {
         viewModelScope.launch(Dispatchers.Default) {
-            runCatching { noiseClassifier.initialize() }
-                .onSuccess { classifierInitialized = true }
+            runCatching { 
+                println("NoiseClassifier initializing...")
+                noiseClassifier.initialize() 
+            }
+                .onSuccess { 
+                    classifierInitialized = true 
+                    println("NoiseClassifier initialized successfully.")
+                }
+                .onFailure { e ->
+                    println("NoiseClassifier initialization failed: ${e.message}")
+                    e.printStackTrace()
+                }
         }
         viewModelScope.launch {
             recordingState.collect { state ->

@@ -1,6 +1,7 @@
 package net.lateinit.noiseguard.data.ml
 
 import android.content.Context
+import android.util.Log
 import android.media.AudioFormat
 import android.media.AudioRecord
 import com.google.mediapipe.tasks.audio.audioclassifier.AudioClassifier
@@ -37,7 +38,12 @@ class NoiseClassifier(
             .setRunningMode(RunningMode.AUDIO_CLIPS)
             .build()
 
-        classifier = AudioClassifier.createFromOptions(context, options)
+        try {
+            classifier = AudioClassifier.createFromOptions(context, options)
+            Log.d("NoiseClassifier", "AudioClassifier initialized successfully.")
+        } catch (e: Exception) {
+            Log.e("NoiseClassifier", "Failed to initialize AudioClassifier.", e)
+        }
     }
 
     override fun startRecordingAndClassifying(onResult: (List<String>) -> Unit) {
@@ -63,6 +69,7 @@ class NoiseClassifier(
             audioRecord.read(buf, 0, len, AudioRecord.READ_BLOCKING)
             audioData.load(buf)
             val result = classifier.classify(audioData)
+            Log.d("NoiseClassifier", "Raw classification result: $result")
 
             // 결과에서 라벨 이름만 추출하여 콜백으로 전달
             val resultLabels: List<String> = result.classificationResults()
@@ -76,6 +83,7 @@ class NoiseClassifier(
                         }
                 }
             onResult(resultLabels)
+            Log.d("NoiseClassifier", "Classified labels: $resultLabels")
 
         }, 0, classificationInterval, TimeUnit.MILLISECONDS)
     }

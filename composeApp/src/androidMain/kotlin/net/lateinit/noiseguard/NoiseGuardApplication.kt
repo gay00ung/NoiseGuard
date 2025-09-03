@@ -1,6 +1,7 @@
 package net.lateinit.noiseguard
 
 import android.app.Application
+import android.util.Log
 import net.lateinit.noiseguard.core.di.androidPlatformModule
 import net.lateinit.noiseguard.core.di.appModules
 import org.koin.android.ext.koin.androidContext
@@ -15,6 +16,7 @@ class NoiseGuardApplication : Application() {
     
     override fun onCreate() {
         super.onCreate()
+        Log.d("NoiseGuardApp", "<<<<< APPLICATION onCreate START >>>>>")
         
         // Koin 초기화
         startKoin {

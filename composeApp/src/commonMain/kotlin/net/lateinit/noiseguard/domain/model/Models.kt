@@ -30,6 +30,7 @@ data class NoiseRecord(
 
 enum class NoiseType {
     FOOTSTEP, HAMMERING, DRAGGING, MUSIC, TALKING, DOOR, WATER, UNKNOWN
+    // TODO: 소음 타입 추가(예: SILENCE, TRAFFIC, CONSTRUCTION 등)
 }
 
 enum class NoiseStatus(val minDb: Float, val color: Color, val label: String) {
