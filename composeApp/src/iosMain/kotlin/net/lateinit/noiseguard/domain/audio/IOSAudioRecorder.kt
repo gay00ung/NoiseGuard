@@ -114,7 +114,7 @@ actual class AudioRecorder {
     private fun startMetering() {
         // 간단한 타이머로 주기적으로 레벨 측정
         NSTimer.scheduledTimerWithTimeInterval(
-            interval = 0.1,
+            interval = 1.0,
             repeats = true
         ) { timer ->
             if (_recordingState.value != RecordingState.RECORDING) {

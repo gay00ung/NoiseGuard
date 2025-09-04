@@ -141,7 +141,7 @@ object AudioConstants {
     const val MIN_DECIBEL = 30f // 최소 데시벨 (조용한 방)
     const val MAX_DECIBEL = 130f // 최대 데시벨 (통증 역치)
     const val REFERENCE_AMPLITUDE = 32768.0f // 16비트 오디오 최대값
-    const val UPDATE_INTERVAL_MS = 100L // UI 업데이트 주기 (밀리초)
+    const val UPDATE_INTERVAL_MS = 1000L // UI 업데이트 주기 (밀리초)
 }
 
 /**
