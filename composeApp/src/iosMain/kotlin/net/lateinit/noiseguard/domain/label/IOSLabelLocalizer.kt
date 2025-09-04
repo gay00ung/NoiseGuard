@@ -1,16 +1,19 @@
 package net.lateinit.noiseguard.domain.label
 
+import kotlinx.cinterop.BetaInteropApi
 import platform.Foundation.NSBundle
 import platform.Foundation.NSData
 import platform.Foundation.NSString
 import platform.Foundation.NSUTF8StringEncoding
 import platform.Foundation.dataWithContentsOfFile
-import kotlin.native.concurrent.AtomicInt
+import platform.Foundation.NSLock
+import platform.Foundation.create
 
 class IOSLabelLocalizer : LabelLocalizer {
     private var loaded = false
     private val indexToKo = mutableMapOf<Int, String>()
     private val nameToKo = mutableMapOf<String, String>()
+    private val lock = NSLock()
 
     override fun localize(index: Int?, englishName: String): String {
         ensureLoaded()
@@ -19,18 +22,23 @@ class IOSLabelLocalizer : LabelLocalizer {
         return englishName
     }
 
+    @OptIn(BetaInteropApi::class)
     private fun ensureLoaded() {
         if (loaded) return
-        synchronized(this) {
-            if (loaded) return
-            val path = NSBundle.mainBundle.pathForResource("yamnet_class_map_ko", ofType = "csv")
-            if (path != null) {
-                val data: NSData? = NSData.dataWithContentsOfFile(path)
-                val nsStr: NSString? = data?.let { NSString.create(it, NSUTF8StringEncoding) }
-                val text = nsStr?.toString() ?: ""
-                if (text.isNotBlank()) parseCsv(text)
+        lock.lock()
+        try {
+            if (!loaded) {
+                val path = NSBundle.mainBundle.pathForResource("yamnet_class_map_ko", ofType = "csv")
+                if (path != null) {
+                    val data: NSData? = NSData.dataWithContentsOfFile(path)
+                    val nsStr: NSString? = data?.let { NSString.create(data = it, encoding = NSUTF8StringEncoding) }
+                    val text = nsStr?.toString() ?: ""
+                    if (text.isNotBlank()) parseCsv(text)
+                }
+                loaded = true
             }
-            loaded = true
+        } finally {
+            lock.unlock()
         }
     }
 
@@ -86,4 +94,3 @@ class IOSLabelLocalizer : LabelLocalizer {
         return out
     }
 }
-
