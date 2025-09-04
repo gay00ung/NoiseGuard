@@ -87,6 +87,7 @@ fun HomeScreen(
     val recordingState by viewModel.recordingState.collectAsStateWithLifecycle()
     val noiseLevel by viewModel.noiseLevel.collectAsStateWithLifecycle()
     val noiseType by viewModel.noiseType.collectAsStateWithLifecycle()
+    val topLabels by viewModel.topLabels.collectAsStateWithLifecycle()
     var selectedTab by remember { mutableStateOf(0) }
 
     val noiseLevelHistory = remember { mutableStateListOf<NoiseLevel>() }
@@ -163,6 +164,7 @@ fun HomeScreen(
                         noiseLevel = noiseLevel,
                         isRecording = recordingState == RecordingState.RECORDING,
                         noiseType = noiseType,
+                        topLabels = topLabels,
                         modifier = Modifier.animateContentSize()
                     )
                 }

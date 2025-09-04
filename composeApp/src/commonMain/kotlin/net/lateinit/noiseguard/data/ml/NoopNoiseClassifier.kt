@@ -5,7 +5,7 @@ package net.lateinit.noiseguard.data.ml
  */
 class NoopNoiseClassifier : NoiseClassifierApi {
     override fun initialize() { /* no-op */ }
-    override fun startRecordingAndClassifying(onResult: (List<String>) -> Unit) { /* no-op */ }
+    override fun startRecordingAndClassifying(onResult: (List<ClassifiedLabel>) -> Unit) { /* no-op */ }
     override fun stopRecording() { /* no-op */ }
 }
 

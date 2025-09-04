@@ -18,7 +18,7 @@ import java.util.concurrent.TimeUnit
 class NoiseClassifier(
     private val context: Context,
     private val modelFileName: String = "yamnet.tflite",
-    private val minScore: Float = 0.3f,
+    private val minScore: Float = 0.05f,
 ) : NoiseClassifierApi {
     private lateinit var classifier: AudioClassifier
     private lateinit var audioRecord: AudioRecord
@@ -33,7 +33,7 @@ class NoiseClassifier(
 
         val options = AudioClassifier.AudioClassifierOptions.builder()
             .setBaseOptions(baseOptions)
-            .setMaxResults(3)
+            .setMaxResults(10)
             .setScoreThreshold(minScore)
             .setRunningMode(RunningMode.AUDIO_CLIPS)
             .build()
@@ -46,7 +46,7 @@ class NoiseClassifier(
         }
     }
 
-    override fun startRecordingAndClassifying(onResult: (List<String>) -> Unit) {
+    override fun startRecordingAndClassifying(onResult: (List<ClassifiedLabel>) -> Unit) {
         // MediaPipe Tasks 유틸리티로 AudioRecord 생성 및 AudioData 준비
         audioRecord = classifier.createAudioRecord()
         audioRecord.startRecording()
@@ -69,21 +69,35 @@ class NoiseClassifier(
             audioRecord.read(buf, 0, len, AudioRecord.READ_BLOCKING)
             audioData.load(buf)
             val result = classifier.classify(audioData)
-            Log.d("NoiseClassifier", "Raw classification result: $result")
 
-            // 결과에서 라벨 이름만 추출하여 콜백으로 전달
-            val resultLabels: List<String> = result.classificationResults()
-                .flatMap { cr: ClassificationResult ->
-                    cr.classifications()
-                        .flatMap { cls: Classifications ->
-                            cls.categories().map { c: Category ->
-                                val dn = c.displayName()
-                                dn.ifEmpty { c.categoryName() }
-                            }
-                        }
+            // 라벨 + 스코어를 집계하여 콜백으로 전달 (이름별 max score)
+            val scoresByName = linkedMapOf<String, Float>()
+            result.classificationResults().forEach { cr: ClassificationResult ->
+                cr.classifications().forEach { cls: Classifications ->
+                    cls.categories().forEach { c: Category ->
+                        val name = c.displayName().ifEmpty { c.categoryName() }
+                        val s = c.score()
+                        val prev = scoresByName[name]
+                        if (prev == null || s > prev) scoresByName[name] = s
+                    }
                 }
-            onResult(resultLabels)
-            Log.d("NoiseClassifier", "Classified labels: $resultLabels")
+            }
+            val idxByName = mutableMapOf<String, Int>()
+            result.classificationResults().forEach { cr ->
+                cr.classifications().forEach { cls ->
+                    cls.categories().forEach { c ->
+                        val name = c.displayName().ifEmpty { c.categoryName() }
+                        val idx = try { c.index() } catch (e: Exception) { -1 }
+                        if (idx >= 0 && name !in idxByName) idxByName[name] = idx
+                    }
+                }
+            }
+
+            val scored = scoresByName.entries
+                .map { ClassifiedLabel(it.key, it.value, idxByName[it.key]) }
+                .sortedByDescending { it.score }
+
+            onResult(scored)
 
         }, 0, classificationInterval, TimeUnit.MILLISECONDS)
     }

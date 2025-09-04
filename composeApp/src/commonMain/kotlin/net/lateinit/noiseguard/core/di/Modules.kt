@@ -3,6 +3,8 @@ package net.lateinit.noiseguard.core.di
 import net.lateinit.noiseguard.domain.usecase.ClassifyNoiseTypeUseCase
 import net.lateinit.noiseguard.presentation.viewmodel.HomeViewModel
 import org.koin.dsl.module
+import net.lateinit.noiseguard.domain.label.LabelLocalizer
+import net.lateinit.noiseguard.domain.label.PassthroughLabelLocalizer
 
 val dataModule = module {
     // DataSource
@@ -17,11 +19,13 @@ val dataModule = module {
 val domainModule = module {
     // UseCases
     single { ClassifyNoiseTypeUseCase() }
+    // Default localizer (overridden on Android/iOS)
+    single<LabelLocalizer> { PassthroughLabelLocalizer() }
 }
 
 val presentationModule = module {
     // ViewModels
-    factory { HomeViewModel(get(), get(), get()) }
+    factory { HomeViewModel(get(), get(), get(), get()) }
     // factoryOf(::RecordingViewModel)
     // factoryOf(::HistoryViewModel)
     // factoryOf(::AnalysisViewModel)

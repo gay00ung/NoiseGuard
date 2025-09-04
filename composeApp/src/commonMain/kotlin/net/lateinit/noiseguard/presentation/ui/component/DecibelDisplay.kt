@@ -70,6 +70,7 @@ fun DecibelDisplay(
     noiseLevel: NoiseLevel?,
     isRecording: Boolean,
     noiseType: NoiseType = NoiseType.UNKNOWN,
+    topLabels: List<String> = emptyList(),
     modifier: Modifier = Modifier
 ) {
     val currentDb = noiseLevel?.current ?: 0f
@@ -235,8 +236,9 @@ fun DecibelDisplay(
                                 tint = status.color,
                                 modifier = Modifier.size(16.dp)
                             )
+                            val primaryLabel = topLabels.firstOrNull()?.ifBlank { null } ?: noiseType.toKoreanLabel()
                             Text(
-                                text = noiseType.toKoreanLabel(),
+                                text = primaryLabel,
                                 style = MaterialTheme.typography.labelSmall.copy(
                                     fontWeight = FontWeight.Medium
                                 ),
@@ -259,6 +261,15 @@ private fun NoiseType.toKoreanLabel(): String = when (this) {
     NoiseType.TALKING -> "대화/말소리"
     NoiseType.DOOR -> "문 소리"
     NoiseType.WATER -> "물 소리"
+    NoiseType.TYPING -> "타이핑/키보드"
+    NoiseType.VACUUM -> "청소기"
+    NoiseType.TRAFFIC -> "교통 소음"
+    NoiseType.CONSTRUCTION -> "공사 소음"
+    NoiseType.PET -> "반려동물"
+    NoiseType.BABY -> "아기 울음"
+    NoiseType.TV -> "TV/방송"
+    NoiseType.ALARM -> "사이렌/알람"
+    NoiseType.APPLIANCE -> "가전 소음"
     NoiseType.UNKNOWN -> "판정 중"
 }
 

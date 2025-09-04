@@ -16,11 +16,14 @@ import net.lateinit.noiseguard.domain.model.NoiseType
 import net.lateinit.noiseguard.domain.permission.PermissionHandler
 import net.lateinit.noiseguard.domain.usecase.ClassifyNoiseTypeUseCase
 import net.lateinit.noiseguard.data.ml.NoiseClassifierApi
+import net.lateinit.noiseguard.data.ml.ClassifiedLabel
+import net.lateinit.noiseguard.domain.label.LabelLocalizer
 
 class HomeViewModel(
     private val permissionHandler: PermissionHandler,
     private val noiseClassifier: NoiseClassifierApi,
-    private val classifyNoiseType: ClassifyNoiseTypeUseCase
+    private val classifyNoiseType: ClassifyNoiseTypeUseCase,
+    private val labelLocalizer: LabelLocalizer
 ) : ViewModel() {
     private val audioRecorder = AudioRecorderFactory.createAudioRecorder()
     
@@ -50,6 +53,9 @@ class HomeViewModel(
 
     private val _noiseType = MutableStateFlow(NoiseType.UNKNOWN)
     val noiseType: StateFlow<NoiseType> = _noiseType
+
+    private val _topLabels = MutableStateFlow<List<String>>(emptyList())
+    val topLabels: StateFlow<List<String>> = _topLabels
 
     private var classifierInitialized = false
     private var classificationRunning = false
@@ -137,9 +143,14 @@ class HomeViewModel(
     private fun startClassificationIfNeeded() {
         if (!classifierInitialized || classificationRunning) return
         classificationRunning = true
-        noiseClassifier.startRecordingAndClassifying { labels ->
+        noiseClassifier.startRecordingAndClassifying { labels: List<ClassifiedLabel> ->
             val type = classifyNoiseType(labels)
-            viewModelScope.launch { _noiseType.emit(type) }
+            val names = labels.take(3).map { labelLocalizer.localize(it.index, it.name) }
+            println("[NoiseGuard] Mapped noise type: $type from labels: $names")
+            viewModelScope.launch {
+                _noiseType.emit(type)
+                _topLabels.emit(names)
+            }
         }
     }
 
