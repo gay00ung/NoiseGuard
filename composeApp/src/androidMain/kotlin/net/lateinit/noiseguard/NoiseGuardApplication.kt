@@ -7,16 +7,24 @@ import net.lateinit.noiseguard.core.di.appModules
 import org.koin.android.ext.koin.androidContext
 import org.koin.android.ext.koin.androidLogger
 import org.koin.core.context.startKoin
+import net.lateinit.noiseguard.domain.audio.PlatformCalibrationStorage
+import net.lateinit.noiseguard.domain.audio.DecibelCalculator
 
 /**
  * Android Application 클래스
  * Koin DI 초기화를 담당
  */
 class NoiseGuardApplication : Application() {
-    
+    companion object {
+        @Volatile
+        var appContext: Application? = null
+            private set
+    }
+
     override fun onCreate() {
         super.onCreate()
         Log.d("NoiseGuardApp", "<<<<< APPLICATION onCreate START >>>>>")
+        appContext = this
         
         // Koin 초기화
         startKoin {
@@ -28,6 +36,11 @@ class NoiseGuardApplication : Application() {
             
             // 모듈 로드
             modules(appModules() + androidPlatformModule)
+        }
+
+        // 저장된 사용자 보정 즉시 반영
+        PlatformCalibrationStorage.loadOffsetOrNull()?.let { saved ->
+            DecibelCalculator.setUserCalibrationOffset(saved)
         }
     }
 }

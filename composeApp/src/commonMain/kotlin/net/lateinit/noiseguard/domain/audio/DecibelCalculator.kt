@@ -11,6 +11,13 @@ import kotlin.math.sqrt
  * 오디오 샘플 데이터를 데시벨 단위로 변환하는 기능 제공
  */
 object DecibelCalculator {
+    // 기준 오프셋(dB)과 사용자 보정 오프셋(dB)
+    private var baseOffsetDb: Float = 90f
+    private var userOffsetDb: Float = 0f
+
+    fun setBaseOffset(offsetDb: Float) { baseOffsetDb = offsetDb }
+    fun setUserCalibrationOffset(offsetDb: Float) { userOffsetDb = offsetDb }
+    fun getUserCalibrationOffset(): Float = userOffsetDb
     
     /**
      * 오디오 샘플의 RMS(Root Mean Square) 값을 계산
@@ -52,15 +59,11 @@ object DecibelCalculator {
      */
     fun convertToDecibel(rms: Float): Float {
         if (rms <= 0) return AudioConstants.MIN_DECIBEL
-        
-        // 20 * log10(rms) 공식 사용
-        // 참조값은 1.0으로 가정 (정규화된 디지털 오디오)
-        val db = 20f * log10(rms)
-        
-        // 실제 환경 데시벨로 변환 (캘리브레이션 필요)
-        // 디지털 -60dB를 실제 30dB로 매핑
-        val calibratedDb = db + 90f
-        
+
+        // dBFS 계산 후 보정 오프셋 적용
+        val dbFs = 20f * log10(rms)
+        val calibratedDb = dbFs + baseOffsetDb + userOffsetDb
+
         return max(AudioConstants.MIN_DECIBEL, min(AudioConstants.MAX_DECIBEL, calibratedDb))
     }
     
@@ -138,7 +141,7 @@ object DecibelCalculator {
 object AudioConstants {
     const val SAMPLE_RATE = 44100 // 샘플링 레이트 (Hz)
     const val BUFFER_SIZE = 1024 // 기본 버퍼 크기
-    const val MIN_DECIBEL = 30f // 최소 데시벨 (조용한 방)
+    const val MIN_DECIBEL = 0f // 최소 데시벨
     const val MAX_DECIBEL = 130f // 최대 데시벨 (통증 역치)
     const val REFERENCE_AMPLITUDE = 32768.0f // 16비트 오디오 최대값
     const val UPDATE_INTERVAL_MS = 1000L // UI 업데이트 주기 (밀리초)

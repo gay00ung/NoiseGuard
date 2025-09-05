@@ -11,7 +11,6 @@ import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
-import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
@@ -46,7 +45,6 @@ import net.lateinit.noiseguard.presentation.theme.Primary700
 fun ModernBottomBar(
     selectedTab: Int,
     onTabSelected: (Int) -> Unit,
-    isRecording: Boolean
 ) {
     val tabs = listOf(
         TabItem(Icons.Filled.Home, Icons.Filled.Home, "홈"),
@@ -57,15 +55,14 @@ fun ModernBottomBar(
 
     Surface(
         modifier = Modifier
-            .fillMaxWidth()
-            .height(80.dp),
+            .fillMaxWidth(),
         color = MaterialTheme.colorScheme.surface.copy(alpha = 0.95f),
         tonalElevation = 3.dp
     ) {
         // iOS 스타일 블러 효과 배경
         Box(
             modifier = Modifier
-                .fillMaxSize()
+                .fillMaxWidth()
                 .background(
                     brush = Brush.verticalGradient(
                         colors = listOf(
@@ -77,8 +74,8 @@ fun ModernBottomBar(
         ) {
             Row(
                 modifier = Modifier
-                    .fillMaxSize()
-                    .padding(horizontal = 8.dp, vertical = 8.dp),
+                    .fillMaxWidth()
+                    .padding(horizontal = 12.dp, vertical = 6.dp),
                 horizontalArrangement = Arrangement.SpaceEvenly,
                 verticalAlignment = Alignment.CenterVertically
             ) {
@@ -125,7 +122,7 @@ private fun BottomBarTab(
     ) {
         Box(
             modifier = Modifier
-                .fillMaxSize()
+                .fillMaxWidth()
                 .background(
                     if (isSelected) {
                         Brush.radialGradient(
@@ -145,7 +142,7 @@ private fun BottomBarTab(
             Column(
                 horizontalAlignment = Alignment.CenterHorizontally,
                 verticalArrangement = Arrangement.Center,
-                modifier = Modifier.padding(vertical = 4.dp)
+                modifier = Modifier.padding(vertical = 2.dp)
             ) {
                 Icon(
                     imageVector = if (isSelected) tab.selectedIcon else tab.icon,

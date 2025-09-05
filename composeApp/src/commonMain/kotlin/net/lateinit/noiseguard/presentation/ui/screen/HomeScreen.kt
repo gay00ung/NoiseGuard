@@ -43,6 +43,7 @@ import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateListOf
 import androidx.compose.runtime.mutableStateOf
@@ -71,7 +72,6 @@ import net.lateinit.noiseguard.presentation.ui.component.ControlButton
 import net.lateinit.noiseguard.presentation.ui.component.DecibelDisplay
 import net.lateinit.noiseguard.presentation.ui.component.FloatingParticles
 import net.lateinit.noiseguard.presentation.ui.component.MiniWaveform
-import net.lateinit.noiseguard.presentation.ui.component.ModernBottomBar
 import net.lateinit.noiseguard.presentation.ui.component.PulsingDot
 import net.lateinit.noiseguard.presentation.ui.component.RealtimeGraph
 import net.lateinit.noiseguard.presentation.ui.component.StatWidget
@@ -88,7 +88,8 @@ fun HomeScreen(
     val noiseLevel by viewModel.noiseLevel.collectAsStateWithLifecycle()
     val noiseType by viewModel.noiseType.collectAsStateWithLifecycle()
     val topLabels by viewModel.topLabels.collectAsStateWithLifecycle()
-    var selectedTab by remember { mutableStateOf(0) }
+    val relativeDisplay by net.lateinit.noiseguard.domain.audio.CalibrationConfig.relativeDisplay.collectAsState()
+    val baselineDb by net.lateinit.noiseguard.domain.audio.CalibrationConfig.baselineDb.collectAsState()
 
     val noiseLevelHistory = remember { mutableStateListOf<NoiseLevel>() }
 
@@ -98,9 +99,16 @@ fun HomeScreen(
         }
     }
 
-    LaunchedEffect(noiseLevel.timestamp, recordingState) {
+    LaunchedEffect(noiseLevel.timestamp, recordingState, relativeDisplay, baselineDb) {
         if (recordingState == RecordingState.RECORDING) {
-            noiseLevelHistory.add(noiseLevel)
+            val base = baselineDb ?: 0f
+            val adjusted = if (relativeDisplay && baselineDb != null) {
+                val cur = (noiseLevel.current - base).coerceAtLeast(0f)
+                val avg = (noiseLevel.average - base).coerceAtLeast(0f)
+                val peak = (noiseLevel.peak - base).coerceAtLeast(0f)
+                noiseLevel.copy(current = cur, average = avg, peak = peak)
+            } else noiseLevel
+            noiseLevelHistory.add(adjusted)
             if (noiseLevelHistory.size > 50) {
                 noiseLevelHistory.removeAt(0)
             }
@@ -129,9 +137,12 @@ fun HomeScreen(
                 )
             )
     ) {
+        val baseForDisplay = baselineDb ?: 0f
+        val displayCurrentDb = if (relativeDisplay && baselineDb != null) (currentDecibel - baseForDisplay).coerceAtLeast(0f) else currentDecibel
+
         FloatingParticles(
             isActive = recordingState == RecordingState.RECORDING,
-            color = getNoiseColor(currentDecibel)
+            color = getNoiseColor(displayCurrentDb)
         )
 
         Scaffold(
@@ -139,15 +150,8 @@ fun HomeScreen(
             topBar = {
                 DynamicIslandTopBar(
                     isRecording = recordingState == RecordingState.RECORDING,
-                    currentDb = currentDecibel,
+                    currentDb = displayCurrentDb,
                     expansion = islandExpanded
-                )
-            },
-            bottomBar = {
-                ModernBottomBar(
-                    selectedTab = selectedTab,
-                    onTabSelected = { selectedTab = it },
-                    isRecording = recordingState == RecordingState.RECORDING
                 )
             }
         ) { paddingValues ->
@@ -160,8 +164,16 @@ fun HomeScreen(
             ) {
                 // 메인 데시벨 디스플레이 카드
                 item {
+                    val displayNoiseLevel = if (relativeDisplay && baselineDb != null) {
+                        val base = baselineDb ?: 0f
+                        val cur = (noiseLevel.current - base).coerceAtLeast(0f)
+                        val avg = (noiseLevel.average - base).coerceAtLeast(0f)
+                        val peak = (noiseLevel.peak - base).coerceAtLeast(0f)
+                        noiseLevel.copy(current = cur, average = avg, peak = peak)
+                    } else noiseLevel
+
                     DecibelDisplay(
-                        noiseLevel = noiseLevel,
+                        noiseLevel = displayNoiseLevel,
                         isRecording = recordingState == RecordingState.RECORDING,
                         noiseType = noiseType,
                         topLabels = topLabels,
@@ -171,9 +183,16 @@ fun HomeScreen(
 
                 // Live Activity 스타일 상태 카드
                 item {
+                    val base = baselineDb ?: 0f
+                    val displayNoiseLevel2 = if (relativeDisplay && baselineDb != null) {
+                        val cur = (noiseLevel.current - base).coerceAtLeast(0f)
+                        val avg = (noiseLevel.average - base).coerceAtLeast(0f)
+                        val peak = (noiseLevel.peak - base).coerceAtLeast(0f)
+                        noiseLevel.copy(current = cur, average = avg, peak = peak)
+                    } else noiseLevel
                     LiveActivityCard(
                         recordingState = recordingState,
-                        noiseLevel = noiseLevel
+                        noiseLevel = displayNoiseLevel2
                     )
                 }
 
@@ -207,7 +226,7 @@ fun HomeScreen(
                     ) {
                         StatWidget(
                             title = "평균",
-                            value = "${noiseLevel.average.toInt()}",
+                            value = "${((if (relativeDisplay && baselineDb != null) (noiseLevel.average - (baselineDb ?: 0f)) else noiseLevel.average).coerceAtLeast(0f)).toInt()}",
                             unit = "dB",
                             icon = Icons.Outlined.BarChart,
                             color = Safe,
@@ -215,7 +234,7 @@ fun HomeScreen(
                         )
                         StatWidget(
                             title = "최대",
-                            value = "${noiseLevel.peak.toInt()}",
+                            value = "${((if (relativeDisplay && baselineDb != null) (noiseLevel.peak - (baselineDb ?: 0f)) else noiseLevel.peak).coerceAtLeast(0f)).toInt()}",
                             unit = "dB",
                             icon = Icons.AutoMirrored.Outlined.TrendingUp,
                             color = Warning,
@@ -223,7 +242,7 @@ fun HomeScreen(
                         )
                         StatWidget(
                             title = "현재",
-                            value = "${noiseLevel.current.toInt()}",
+                            value = "${displayCurrentDb.toInt()}",
                             unit = "dB",
                             icon = Icons.AutoMirrored.Outlined.TrendingDown,
                             color = AccentTeal,
@@ -234,9 +253,16 @@ fun HomeScreen(
 
                 // AI 분석 카드
                 item {
+                    val base = baselineDb ?: 0f
+                    val displayNoiseLevel3 = if (relativeDisplay && baselineDb != null) {
+                        val cur = (noiseLevel.current - base).coerceAtLeast(0f)
+                        val avg = (noiseLevel.average - base).coerceAtLeast(0f)
+                        val peak = (noiseLevel.peak - base).coerceAtLeast(0f)
+                        noiseLevel.copy(current = cur, average = avg, peak = peak)
+                    } else noiseLevel
                     AIAnalysisCard(
-                        currentDecibel = currentDecibel,
-                        noiseLevel = noiseLevel
+                        currentDecibel = displayCurrentDb,
+                        noiseLevel = displayNoiseLevel3
                     )
                 }
             }

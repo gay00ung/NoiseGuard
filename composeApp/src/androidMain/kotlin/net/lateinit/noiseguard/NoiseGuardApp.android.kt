@@ -1,6 +1,9 @@
 package net.lateinit.noiseguard
 
 import androidx.compose.runtime.Composable
+import androidx.compose.foundation.layout.Box
+import androidx.compose.foundation.layout.navigationBarsPadding
+import androidx.compose.ui.Modifier
 import net.lateinit.noiseguard.presentation.theme.NoiseGuardTheme
 import net.lateinit.noiseguard.presentation.ui.navigation.NoiseGuardNavigation
 
@@ -11,6 +14,8 @@ import net.lateinit.noiseguard.presentation.ui.navigation.NoiseGuardNavigation
 @Composable
 actual fun NoiseGuardApp() {
     NoiseGuardTheme {
-        NoiseGuardNavigation()
+        Box(modifier = Modifier.navigationBarsPadding()) {
+            NoiseGuardNavigation()
+        }
     }
 }
