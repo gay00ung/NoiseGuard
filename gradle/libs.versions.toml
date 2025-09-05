@@ -1,6 +1,6 @@
 [versions]
 accompanistPermissions = "0.37.3"
-agp = "8.12.2"
+agp = "8.13.0"
 android-compileSdk = "36"
 android-minSdk = "24"
 #noinspection OldTargetApi
@@ -14,8 +14,8 @@ cameraCamera2 = "1.4.2"
 composeMultiplatform = "1.8.2"
 firebaseAnalyticsKtx = "22.5.0"
 firebaseCrashlyticsKtx = "19.4.4"
-koinAndroid = "4.1.0"
-koinCompose = "4.1.0"
+koinAndroid = "4.1.1"
+koinCompose = "4.1.1"
 kotlin = "2.2.10"
 kotlinxCoroutinesCore = "1.10.2"
 kotlinxDatetime = "0.7.1"
