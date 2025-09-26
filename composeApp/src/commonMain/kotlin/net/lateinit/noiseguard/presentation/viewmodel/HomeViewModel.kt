@@ -2,14 +2,21 @@ package net.lateinit.noiseguard.presentation.viewmodel
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import kotlinx.coroutines.CancellationException
 import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.TimeoutCancellationException
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.StateFlow
+import kotlinx.coroutines.flow.collect
+import kotlinx.coroutines.flow.onEach
 import kotlinx.coroutines.flow.stateIn
 import kotlinx.coroutines.launch
+import kotlinx.coroutines.withContext
+import kotlinx.coroutines.withTimeout
 import net.lateinit.noiseguard.core.util.getCurrentTimeMillis
 import net.lateinit.noiseguard.domain.audio.AudioRecorderFactory
+import net.lateinit.noiseguard.domain.audio.CalibrationConfig
 import net.lateinit.noiseguard.domain.audio.RecordingState
 import net.lateinit.noiseguard.domain.model.NoiseLevel
 import net.lateinit.noiseguard.domain.model.NoiseType
@@ -56,6 +63,9 @@ class HomeViewModel(
 
     private val _topLabels = MutableStateFlow<List<String>>(emptyList())
     val topLabels: StateFlow<List<String>> = _topLabels
+
+    private val _baselineCalibrationState = MutableStateFlow<BaselineCalibrationState>(BaselineCalibrationState.Idle)
+    val baselineCalibrationState: StateFlow<BaselineCalibrationState> = _baselineCalibrationState
 
     private var classifierInitialized = false
     private var classificationRunning = false
@@ -162,9 +172,85 @@ class HomeViewModel(
     }
 
 
+    fun startBaselineCalibration(durationMillis: Long = 5_000L) {
+        if (_baselineCalibrationState.value is BaselineCalibrationState.InProgress) return
+
+        viewModelScope.launch {
+            if (!permissionHandler.hasAudioPermission()) {
+                val granted = permissionHandler.requestAudioPermission()
+                if (!granted) {
+                    _baselineCalibrationState.value = BaselineCalibrationState.Failed("마이크 권한이 필요해요.")
+                    return@launch
+                }
+            }
+
+            val readings = mutableListOf<Float>()
+            val wasRecording = recordingState.value == RecordingState.RECORDING
+            _baselineCalibrationState.value = BaselineCalibrationState.InProgress(progress = 0f)
+
+            try {
+                if (!wasRecording) {
+                    audioRecorder.startRecording()
+                }
+
+                val startTime = getCurrentTimeMillis()
+
+                withContext(Dispatchers.Default) {
+                    try {
+                        withTimeout(durationMillis) {
+                            audioRecorder.decibelFlow
+                                .onEach { value ->
+                                    if (!value.isFinite()) return@onEach
+                                    readings.add(value)
+                                    val elapsed = (getCurrentTimeMillis() - startTime).coerceAtLeast(0L)
+                                    val progress = (elapsed.toFloat() / durationMillis).coerceIn(0f, 1f)
+                                    _baselineCalibrationState.value = BaselineCalibrationState.InProgress(progress)
+                                }
+                                .collect()
+                        }
+                    } catch (_: TimeoutCancellationException) {
+                        // Expected after duration elapsed
+                    }
+                }
+
+                _baselineCalibrationState.value = BaselineCalibrationState.InProgress(progress = 1f)
+
+                val averaged = readings.ifEmpty { null }?.average()?.toFloat()
+                if (averaged != null && averaged.isFinite()) {
+                    CalibrationConfig.setBaselineTo(averaged)
+                    _baselineCalibrationState.value = BaselineCalibrationState.Completed(averaged)
+                } else {
+                    _baselineCalibrationState.value = BaselineCalibrationState.Failed(message = null)
+                }
+            } catch (c: CancellationException) {
+                throw c
+            } catch (t: Throwable) {
+                _baselineCalibrationState.value = BaselineCalibrationState.Failed(message = t.message)
+            } finally {
+                if (!wasRecording) {
+                    audioRecorder.stopRecording()
+                }
+            }
+        }
+    }
+
+    fun resetBaselineCalibrationState() {
+        if (_baselineCalibrationState.value !is BaselineCalibrationState.InProgress) {
+            _baselineCalibrationState.value = BaselineCalibrationState.Idle
+        }
+    }
+
+
     override fun onCleared() {
         super.onCleared()
         // ViewModel이 정리될 때 녹음 중지
         audioRecorder.stopRecording()
     }
+}
+
+sealed interface BaselineCalibrationState {
+    object Idle : BaselineCalibrationState
+    data class InProgress(val progress: Float) : BaselineCalibrationState
+    data class Completed(val baselineDb: Float) : BaselineCalibrationState
+    data class Failed(val message: String?) : BaselineCalibrationState
 }
