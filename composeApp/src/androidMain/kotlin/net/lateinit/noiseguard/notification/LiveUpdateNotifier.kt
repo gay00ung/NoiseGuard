@@ -53,7 +53,6 @@ class LiveUpdateNotifier(private val context: Context) {
                 .setContentTitle("소음 측정 종료")
                 .setContentText(text)
                 .setOngoing(false)
-                .setRequestPromotedOngoing(false)
                 .setProgress(0, 0, false)
                 .setStyle(NotificationCompat.BigTextStyle().bigText(text))
                 .build()
@@ -71,4 +70,4 @@ class LiveUpdateNotifier(private val context: Context) {
             .setOngoing(true)
             .setPriority(NotificationCompat.PRIORITY_DEFAULT)
             .setCategory(NotificationCompat.CATEGORY_PROGRESS)
-            .setRequestPromotedOngoing(true)
+}
