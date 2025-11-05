@@ -21,8 +21,8 @@ import org.koin.compose.viewmodel.koinViewModel
 sealed class Screen(val route: String) {
     object Home : Screen("home")
     object Recording : Screen("recording")
-    object History : Screen("history")
-    object Analysis : Screen("analysis")
+//    object History : Screen("history")
+//    object Analysis : Screen("analysis")
     object Settings : Screen("settings")
 }
 
@@ -38,9 +38,9 @@ fun NoiseGuardNavigation(
             val currentRoute = backStackEntry?.destination?.route ?: Screen.Home.route
             val selectedTab = when (currentRoute) {
                 Screen.Home.route -> 0
-                Screen.History.route -> 1
-                Screen.Analysis.route -> 2
-                Screen.Settings.route -> 3
+//                Screen.History.route -> 1
+//                Screen.Analysis.route -> 2
+                Screen.Settings.route -> 1
                 else -> 0
             }
             ModernBottomBar(
@@ -48,9 +48,9 @@ fun NoiseGuardNavigation(
                 onTabSelected = { index ->
                     val route = when (index) {
                         0 -> Screen.Home.route
-                        1 -> Screen.History.route
-                        2 -> Screen.Analysis.route
-                        3 -> Screen.Settings.route
+//                        1 -> Screen.History.route
+//                        2 -> Screen.Analysis.route
+                        1 -> Screen.Settings.route
                         else -> Screen.Home.route
                     }
                     if (route != currentRoute) {
@@ -75,12 +75,12 @@ fun NoiseGuardNavigation(
             composable(Screen.Recording.route) {
                 RecordingScreen()
             }
-            composable(Screen.History.route) {
-                HistoryScreen()
-            }
-            composable(Screen.Analysis.route) {
-                AnalysisScreen()
-            }
+//            composable(Screen.History.route) {
+//                HistoryScreen()
+//            }
+//            composable(Screen.Analysis.route) {
+//                AnalysisScreen()
+//            }
             composable(Screen.Settings.route) {
                 SettingsScreen(homeViewModel)
             }

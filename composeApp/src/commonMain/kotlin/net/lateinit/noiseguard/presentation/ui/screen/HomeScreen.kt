@@ -324,7 +324,7 @@ private fun DynamicIslandTopBar(
                         Row {
                             Spacer(modifier = Modifier.width(8.dp))
                             Text(
-                                "• 녹음 중",
+                                "• 측정 중",
                                 color = Color.White.copy(alpha = 0.7f),
                                 style = MaterialTheme.typography.labelSmall
                             )

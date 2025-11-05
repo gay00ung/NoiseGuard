@@ -48,8 +48,8 @@ fun ModernBottomBar(
 ) {
     val tabs = listOf(
         TabItem(Icons.Filled.Home, Icons.Filled.Home, "홈"),
-        TabItem(Icons.Outlined.History, Icons.Filled.History, "기록"),
-        TabItem(Icons.Outlined.Analytics, Icons.Filled.Assessment, "분석"),
+//        TabItem(Icons.Outlined.History, Icons.Filled.History, "기록"),
+//        TabItem(Icons.Outlined.Analytics, Icons.Filled.Assessment, "분석"),
         TabItem(Icons.Outlined.Settings, Icons.Filled.Settings, "설정")
     )
 

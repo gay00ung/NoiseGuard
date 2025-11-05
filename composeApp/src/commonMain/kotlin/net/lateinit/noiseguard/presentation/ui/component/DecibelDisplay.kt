@@ -369,7 +369,7 @@ private fun RecordingIndicator() {
                 .background(Color.Red.copy(alpha = alpha))
         )
         Text(
-            text = "녹음 중",
+            text = "측정 중",
             style = MaterialTheme.typography.labelMedium,
             color = MaterialTheme.colorScheme.onSurfaceVariant
         )
