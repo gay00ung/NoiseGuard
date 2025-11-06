@@ -1,5 +1,6 @@
 package net.lateinit.noiseguard
 
+import android.Manifest
 import android.content.pm.*
 import android.os.*
 import androidx.activity.*
@@ -8,6 +9,7 @@ import androidx.activity.result.contract.*
 import androidx.compose.runtime.*
 import androidx.compose.ui.tooling.preview.*
 import androidx.core.content.*
+import androidx.lifecycle.lifecycleScope
 import kotlinx.coroutines.*
 import kotlinx.coroutines.flow.*
 import net.lateinit.noiseguard.domain.permission.*
@@ -54,6 +56,12 @@ class MainActivity : ComponentActivity(), PermissionRequester {
 
         // PermissionRequester 등록
         PermissionRequesterHolder.requester = this
+
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
+            lifecycleScope.launch {
+                requestPermission(Manifest.permission.POST_NOTIFICATIONS)
+            }
+        }
 
         setContent {
             NoiseGuardApp()
