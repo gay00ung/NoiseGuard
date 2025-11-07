@@ -16,6 +16,12 @@ object CalibrationConfig {
     private val _relativeDisplay = MutableStateFlow(false)
     val relativeDisplay: StateFlow<Boolean> = _relativeDisplay
 
+    private val _autoTimerMin = MutableStateFlow(0L)
+    val autoTimerMin: StateFlow<Long> = _autoTimerMin
+
+    private val _autoTimerSec = MutableStateFlow(0L)
+    val autoTimerSec: StateFlow<Long> = _autoTimerSec
+
     init {
         PlatformCalibrationStorage.loadOffsetOrNull()?.let {
             _userOffsetDb.value = it
@@ -41,6 +47,13 @@ object CalibrationConfig {
         _relativeDisplay.value = enabled
         PlatformCalibrationStorage.saveRelativeMode(enabled)
     }
+
+    fun setAutoTimer(min: Long, sec: Long) {
+        val clampedMin = min.coerceIn(0L, 59L)
+        val clampedSec = sec.coerceIn(0L, 59L)
+        _autoTimerMin.value = clampedMin
+        _autoTimerSec.value = clampedSec
+    }
 }
 
 /**
@@ -54,4 +67,3 @@ expect object PlatformCalibrationStorage {
     fun saveRelativeMode(enabled: Boolean)
     fun loadRelativeModeOrNull(): Boolean?
 }
-

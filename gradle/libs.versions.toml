@@ -41,6 +41,7 @@ accompanist-permissions = { module = "com.google.accompanist:accompanist-permiss
 android-driver = { module = "app.cash.sqldelight:android-driver", version.ref = "androidDriver" }
 android-wave-recorder = { module = "com.github.squti:Android-Wave-Recorder", version.ref = "androidWaveRecorder" }
 androidx-camera-camera2 = { module = "androidx.camera:camera-camera2", version.ref = "cameraCamera2" }
+androidx-foundation = { module = "androidx.compose.foundation:foundation" }
 androidx-material3 = { group = "androidx.compose.material3", name = "material3", version.ref = "material3" }
 androidx-ui = { module = "androidx.compose.ui:ui", version.ref = "ui" }
 androidx-work-runtime-ktx = { module = "androidx.work:work-runtime-ktx", version.ref = "workRuntimeKtx" }
