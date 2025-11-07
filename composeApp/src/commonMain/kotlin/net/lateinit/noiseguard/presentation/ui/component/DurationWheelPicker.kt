@@ -35,6 +35,7 @@ import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
 import org.jetbrains.compose.ui.tooling.preview.Preview
 import kotlin.math.abs
@@ -91,13 +92,17 @@ private fun NumberWheel(
     val values = remember(range) { range.toList() }
     val maxFirstVisible = (values.lastIndex - (visibleCount - 1)).coerceAtLeast(0)
 
-    val initialFirstVisible = remember(value, range) {
+    val initialFirstVisible = remember(range) {
         (value - range.first - pad).coerceIn(0, maxFirstVisible)
     }
-
-    val listState = rememberLazyListState(initialFirstVisibleItemIndex = initialFirstVisible)
+    val listState = rememberLazyListState(
+        initialFirstVisibleItemIndex = initialFirstVisible
+    )
     val flingBehavior = rememberSnapFlingBehavior(listState)
     val coroutineScope = rememberCoroutineScope()
+
+    var isUserScrolling by remember { mutableStateOf(false) }
+    var hasInitialized by remember { mutableStateOf(false) }
 
     // 중앙 아이템 인덱스 계산
     val centerItemIndex =
@@ -121,10 +126,49 @@ private fun NumberWheel(
     val textMuted = MaterialTheme.colorScheme.onSurfaceVariant
 
     LaunchedEffect(value) {
-        if (listState.isScrollInProgress) return@LaunchedEffect
+        if (!hasInitialized) {
+            hasInitialized = true
+            return@LaunchedEffect
+        }
+        if (listState.isScrollInProgress || isUserScrolling) return@LaunchedEffect
         val desiredFirst = (value - range.first - pad).coerceIn(0, maxFirstVisible)
         if (listState.firstVisibleItemIndex != desiredFirst) {
             listState.animateScrollToItem(desiredFirst)
+        }
+    }
+
+    LaunchedEffect(listState.isScrollInProgress) {
+        if (listState.isScrollInProgress) {
+            isUserScrolling = true
+        } else {
+            delay(50)
+            val layoutInfo = listState.layoutInfo
+            if (layoutInfo.visibleItemsInfo.isEmpty()) {
+                isUserScrolling = false
+                return@LaunchedEffect
+            }
+
+            val viewportCenter = (layoutInfo.viewportStartOffset + layoutInfo.viewportEndOffset) / 2
+            val nearest = layoutInfo.visibleItemsInfo.minByOrNull { item ->
+                val center = item.offset + item.size / 2
+                abs(center - viewportCenter)
+            } ?: run {
+                isUserScrolling = false
+                return@LaunchedEffect
+            }
+
+            val centerIndex = nearest.index
+            val snappedValue = values.getOrNull(centerIndex) ?: run {
+                isUserScrolling = false
+                return@LaunchedEffect
+            }
+
+            if (snappedValue != value) {
+                onValueSelected(snappedValue)
+                delay(100)
+            }
+
+            isUserScrolling = false
         }
     }
 
