@@ -20,6 +20,7 @@ import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.outlined.AutoGraph
 import androidx.compose.material.icons.outlined.Flag
+import androidx.compose.material.icons.outlined.Timer
 import androidx.compose.material.icons.outlined.TipsAndUpdates
 import androidx.compose.material.icons.outlined.Tune
 import androidx.compose.material3.CenterAlignedTopAppBar
@@ -28,6 +29,7 @@ import androidx.compose.material3.FilledTonalButton
 import androidx.compose.material3.Icon
 import androidx.compose.material3.LinearProgressIndicator
 import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.ProgressIndicatorDefaults
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Slider
 import androidx.compose.material3.SliderDefaults
@@ -39,6 +41,7 @@ import androidx.compose.material3.TopAppBarDefaults
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
+import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Brush
@@ -53,6 +56,8 @@ import net.lateinit.noiseguard.presentation.theme.AccentTeal
 import net.lateinit.noiseguard.presentation.theme.Gray700
 import net.lateinit.noiseguard.presentation.theme.Primary700
 import net.lateinit.noiseguard.presentation.theme.Primary900
+import net.lateinit.noiseguard.presentation.ui.component.DurationWheelPicker
+import kotlin.math.round
 
 @Composable
 fun SettingsScreen(viewModel: HomeViewModel) {
@@ -61,6 +66,8 @@ fun SettingsScreen(viewModel: HomeViewModel) {
     val relativeDisplay by CalibrationConfig.relativeDisplay.collectAsState()
     val currentDb by viewModel.currentDecibel.collectAsState()
     val baselineCalibrationState by viewModel.baselineCalibrationState.collectAsState()
+    val autoTimerMinutes by CalibrationConfig.autoTimerMin.collectAsState()
+    val autoTimerSeconds by CalibrationConfig.autoTimerSec.collectAsState()
 
     Box(
         modifier = Modifier
@@ -119,8 +126,26 @@ fun SettingsScreen(viewModel: HomeViewModel) {
                         onReset = { CalibrationConfig.setUserOffset(0f) },
                         onAutoTune = {
                             val target = 35f
-                            CalibrationConfig.setUserOffset((target - currentDb).coerceIn(-40f, 40f))
+                            CalibrationConfig.setUserOffset(
+                                (target - currentDb).coerceIn(
+                                    -40f,
+                                    40f
+                                )
+                            )
                         }
+                    )
+                }
+
+                item {
+                    AutoTimerCard(
+                        minutes = autoTimerMinutes,
+                        seconds = autoTimerSeconds,
+                        onMinutesChange = { newMinutes ->
+                            CalibrationConfig.setAutoTimer(newMinutes, autoTimerSeconds)
+                        },
+                        onSecondsChange = { newSeconds ->
+                            CalibrationConfig.setAutoTimer(autoTimerMinutes, newSeconds)
+                        },
                     )
                 }
             }
@@ -146,9 +171,12 @@ private fun SettingsTopBar(currentDb: Float) {
                 )
             }
         },
-        colors = TopAppBarDefaults.centerAlignedTopAppBarColors(
+        colors = TopAppBarDefaults.topAppBarColors(
             containerColor = Color.Transparent,
-            titleContentColor = MaterialTheme.colorScheme.onBackground
+            scrolledContainerColor = Color.Unspecified,
+            navigationIconContentColor = Color.Unspecified,
+            titleContentColor = MaterialTheme.colorScheme.onBackground,
+            actionIconContentColor = Color.Unspecified
         )
     )
 }
@@ -165,7 +193,7 @@ private fun MeasurementGuidanceCard(currentDb: Float) {
             verticalArrangement = Arrangement.spacedBy(12.dp)
         ) {
             Row(
-                verticalAlignment = androidx.compose.ui.Alignment.CenterVertically
+                verticalAlignment = Alignment.CenterVertically
             ) {
                 Icon(
                     imageVector = Icons.Outlined.TipsAndUpdates,
@@ -226,7 +254,7 @@ private fun BaselineSettingsCard(
 
     val baselineLabel = baselineDb?.let { "현재 기준점 ${it.toInt()} dB" } ?: "아직 기준점이 없어요"
     val statusText = when (calibrationState) {
-        is BaselineCalibrationState.InProgress -> "조용한 환경을 유지해 주세요. ${ (progress * 100).roundToInt() }% 측정 중"
+        is BaselineCalibrationState.InProgress -> "조용한 환경을 유지해 주세요. ${(progress * 100).roundToInt()}% 측정 중"
         is BaselineCalibrationState.Completed -> "새 기준점 ${calibrationState.baselineDb.toInt()} dB가 적용되었어요."
         is BaselineCalibrationState.Failed -> calibrationState.message ?: "측정에 실패했어요. 다시 시도해 주세요."
         BaselineCalibrationState.Idle -> null
@@ -247,7 +275,7 @@ private fun BaselineSettingsCard(
             verticalArrangement = Arrangement.spacedBy(16.dp)
         ) {
             Row(
-                verticalAlignment = androidx.compose.ui.Alignment.CenterVertically
+                verticalAlignment = Alignment.CenterVertically
             ) {
                 Icon(
                     imageVector = Icons.Outlined.Flag,
@@ -267,7 +295,11 @@ private fun BaselineSettingsCard(
                         style = MaterialTheme.typography.bodyMedium,
                         color = MaterialTheme.colorScheme.onSurfaceVariant
                     )
-                    AnimatedVisibility(visible = statusText != null, enter = fadeIn(), exit = fadeOut()) {
+                    AnimatedVisibility(
+                        visible = statusText != null,
+                        enter = fadeIn(),
+                        exit = fadeOut()
+                    ) {
                         statusText?.let {
                             Spacer(modifier = Modifier.height(6.dp))
                             Text(
@@ -282,12 +314,14 @@ private fun BaselineSettingsCard(
 
             AnimatedVisibility(visible = isMeasuring) {
                 LinearProgressIndicator(
-                    progress = progress,
+                    progress = { progress },
                     modifier = Modifier
                         .fillMaxWidth()
                         .height(6.dp)
                         .clip(RoundedCornerShape(999.dp)),
-                    trackColor = MaterialTheme.colorScheme.surfaceVariant
+                    color = ProgressIndicatorDefaults.linearColor,
+                    trackColor = MaterialTheme.colorScheme.surfaceVariant,
+                    strokeCap = ProgressIndicatorDefaults.LinearStrokeCap,
                 )
             }
 
@@ -327,7 +361,7 @@ private fun RelativeDisplayCard(
             verticalArrangement = Arrangement.spacedBy(12.dp)
         ) {
             Row(
-                verticalAlignment = androidx.compose.ui.Alignment.CenterVertically
+                verticalAlignment = Alignment.CenterVertically
             ) {
                 Icon(
                     imageVector = Icons.Outlined.AutoGraph,
@@ -352,7 +386,7 @@ private fun RelativeDisplayCard(
 
             Row(
                 modifier = Modifier.fillMaxWidth(),
-                verticalAlignment = androidx.compose.ui.Alignment.CenterVertically
+                verticalAlignment = Alignment.CenterVertically
             ) {
                 Column {
                     Text(
@@ -393,7 +427,7 @@ private fun CalibrationFineTuneCard(
             verticalArrangement = Arrangement.spacedBy(16.dp)
         ) {
             Row(
-                verticalAlignment = androidx.compose.ui.Alignment.CenterVertically
+                verticalAlignment = Alignment.CenterVertically
             ) {
                 Icon(
                     imageVector = Icons.Outlined.Tune,
@@ -426,9 +460,9 @@ private fun CalibrationFineTuneCard(
 
             Row(
                 modifier = Modifier.fillMaxWidth(),
-                verticalAlignment = androidx.compose.ui.Alignment.CenterVertically
+                verticalAlignment = Alignment.CenterVertically
             ) {
-                val rounded = kotlin.math.round(userOffset * 10f) / 10f
+                val rounded = round(userOffset * 10f) / 10f
                 Column {
                     Text(
                         text = "현재 보정값",
@@ -436,7 +470,7 @@ private fun CalibrationFineTuneCard(
                         color = Gray700
                     )
                     Text(
-                        text = "${rounded} dB",
+                        text = "$rounded dB",
                         style = MaterialTheme.typography.titleMedium,
                         fontWeight = FontWeight.Bold
                     )
@@ -453,6 +487,57 @@ private fun CalibrationFineTuneCard(
             ) {
                 Text("현재값을 35dB로 자동 보정")
             }
+        }
+    }
+}
+
+@Composable
+private fun AutoTimerCard(
+    minutes: Long,
+    seconds: Long,
+    onMinutesChange: (Long) -> Unit,
+    onSecondsChange: (Long) -> Unit,
+) {
+    Surface(
+        modifier = Modifier.fillMaxWidth(),
+        shape = RoundedCornerShape(24.dp),
+        color = MaterialTheme.colorScheme.surface
+    ) {
+        Column(
+            modifier = Modifier.padding(24.dp),
+            verticalArrangement = Arrangement.spacedBy(16.dp)
+        ) {
+            Row(
+                verticalAlignment = Alignment.CenterVertically
+            ) {
+                Icon(
+                    imageVector = Icons.Outlined.Timer,
+                    contentDescription = null,
+                    tint = Primary700,
+                    modifier = Modifier.size(22.dp)
+                )
+                Spacer(modifier = Modifier.width(12.dp))
+                Column {
+                    Text(
+                        text = "자동 타이머 설정",
+                        style = MaterialTheme.typography.titleMedium,
+                        fontWeight = FontWeight.SemiBold
+                    )
+                    Text(
+                        text = "일정 시간 동안 소음을 측정합니다.",
+                        style = MaterialTheme.typography.bodyMedium,
+                        color = MaterialTheme.colorScheme.onSurfaceVariant
+                    )
+                }
+            }
+
+            DurationWheelPicker(
+                minutes = minutes.toInt(),
+                seconds = seconds.toInt(),
+                onMinutesChange = { onMinutesChange(it.toLong()) },
+                onSecondsChange = { onSecondsChange(it.toLong()) },
+                modifier = Modifier.fillMaxWidth()
+            )
         }
     }
 }
