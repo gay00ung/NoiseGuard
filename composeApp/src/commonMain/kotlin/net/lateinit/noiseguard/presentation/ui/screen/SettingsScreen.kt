@@ -22,6 +22,7 @@ fun SettingsScreen(viewModel: HomeViewModel) {
     val baselineCalibrationState by viewModel.baselineCalibrationState.collectAsState()
     val autoTimerMinutes by CalibrationConfig.autoTimerMin.collectAsState()
     val autoTimerSeconds by CalibrationConfig.autoTimerSec.collectAsState()
+    val autoTimerEnabled by CalibrationConfig.autoTimerEnabled.collectAsState()
 
     Box(
         modifier = Modifier
@@ -92,8 +93,10 @@ fun SettingsScreen(viewModel: HomeViewModel) {
 
                 item {
                     AutoTimerCard(
+                        enabled = autoTimerEnabled,
                         minutes = autoTimerMinutes,
                         seconds = autoTimerSeconds,
+                        onEnabledChange = { CalibrationConfig.setAutoTimerEnabled(it) },
                         onMinutesChange = { newMinutes ->
                             CalibrationConfig.setAutoTimer(newMinutes, autoTimerSeconds)
                         },

@@ -4,14 +4,17 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import kotlinx.coroutines.CancellationException
 import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.Job
 import kotlinx.coroutines.TimeoutCancellationException
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.collect
+import kotlinx.coroutines.flow.combine
 import kotlinx.coroutines.flow.onEach
 import kotlinx.coroutines.flow.stateIn
 import kotlinx.coroutines.launch
+import kotlinx.coroutines.delay
 import kotlinx.coroutines.withContext
 import kotlinx.coroutines.withTimeout
 import net.lateinit.noiseguard.core.util.getCurrentTimeMillis
@@ -69,6 +72,7 @@ class HomeViewModel(
 
     private var classifierInitialized = false
     private var classificationRunning = false
+    private var autoStopJob: Job? = null
 
     init {
         viewModelScope.launch(Dispatchers.Default) {
@@ -93,30 +97,58 @@ class HomeViewModel(
                 }
             }
         }
+        viewModelScope.launch {
+            CalibrationConfig.autoTimerEnabled.collect { enabled ->
+                if (!enabled) {
+                    cancelAutoStopJob()
+                } else if (recordingState.value == RecordingState.RECORDING) {
+                    scheduleAutoStopIfNeeded()
+                }
+            }
+        }
+        viewModelScope.launch {
+            combine(
+                CalibrationConfig.autoTimerMin,
+                CalibrationConfig.autoTimerSec
+            ) { min, sec -> min to sec }
+                .collect {
+                    if (CalibrationConfig.autoTimerEnabled.value &&
+                        recordingState.value == RecordingState.RECORDING
+                    ) {
+                        scheduleAutoStopIfNeeded()
+                    }
+                }
+        }
     }
 
     // 녹음 시작
     fun startRecording() {
         viewModelScope.launch {
             audioRecorder.startRecording()
+            scheduleAutoStopIfNeeded()
         }
     }
     
     // 녹음 중지
     fun stopRecording() {
         viewModelScope.launch {
+            cancelAutoStopJob()
             audioRecorder.stopRecording()
         }
     }
     
     // 녹음 일시정지
     fun pauseRecording() {
+        cancelAutoStopJob()
         audioRecorder.pauseRecording()
     }
     
     // 녹음 재개
     fun resumeRecording() {
-        audioRecorder.resumeRecording()
+        viewModelScope.launch {
+            audioRecorder.resumeRecording()
+            scheduleAutoStopIfNeeded()
+        }
     }
     
     // 녹음 시작/중지 토글
@@ -135,19 +167,40 @@ class HomeViewModel(
             when (recordingState.value) {
                 RecordingState.IDLE -> {
                     audioRecorder.startRecording()
+                    scheduleAutoStopIfNeeded()
                 }
                 RecordingState.RECORDING -> {
+                    cancelAutoStopJob()
                     audioRecorder.stopRecording()
                 }
                 RecordingState.PAUSED -> {
                     audioRecorder.resumeRecording()
+                    scheduleAutoStopIfNeeded()
                 }
                 RecordingState.ERROR -> {
                     // 에러 처리 - 다시 시도
                     audioRecorder.startRecording()
+                    scheduleAutoStopIfNeeded()
                 }
             }
         }
+    }
+    
+    private fun scheduleAutoStopIfNeeded() {
+        autoStopJob?.cancel()
+        if (!CalibrationConfig.autoTimerEnabled.value) return
+        val totalSeconds = CalibrationConfig.autoTimerMin.value * 60 + CalibrationConfig.autoTimerSec.value
+        if (totalSeconds <= 0L) return
+        autoStopJob = viewModelScope.launch {
+            delay(totalSeconds * 1000L)
+            audioRecorder.stopRecording()
+            autoStopJob = null
+        }
+    }
+
+    private fun cancelAutoStopJob() {
+        autoStopJob?.cancel()
+        autoStopJob = null
     }
 
     private fun startClassificationIfNeeded() {

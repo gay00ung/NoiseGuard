@@ -22,6 +22,9 @@ object CalibrationConfig {
     private val _autoTimerSec = MutableStateFlow(0L)
     val autoTimerSec: StateFlow<Long> = _autoTimerSec
 
+    private val _autoTimerEnabled = MutableStateFlow(false)
+    val autoTimerEnabled: StateFlow<Boolean> = _autoTimerEnabled
+
     init {
         PlatformCalibrationStorage.loadOffsetOrNull()?.let {
             _userOffsetDb.value = it
@@ -53,6 +56,10 @@ object CalibrationConfig {
         val clampedSec = sec.coerceIn(0L, 59L)
         _autoTimerMin.value = clampedMin
         _autoTimerSec.value = clampedSec
+    }
+
+    fun setAutoTimerEnabled(enabled: Boolean) {
+        _autoTimerEnabled.value = enabled
     }
 }
 

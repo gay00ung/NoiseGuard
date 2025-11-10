@@ -15,10 +15,12 @@ import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Surface
 import androidx.compose.material3.Switch
+import androidx.compose.material3.SwitchDefaults
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import net.lateinit.noiseguard.presentation.theme.Primary700
@@ -81,7 +83,14 @@ fun RelativeDisplayCard(
                 Switch(
                     checked = isEnabled,
                     onCheckedChange = onToggle,
-                    enabled = hasBaseline
+                    enabled = hasBaseline,
+                    modifier = Modifier
+                        .padding(start = 8.dp, bottom = 2.dp),
+                    colors = SwitchDefaults.colors(
+                        uncheckedTrackColor = MaterialTheme.colorScheme.onSurface.copy(alpha = 0.2f),
+                        uncheckedThumbColor = Color.White,
+                        uncheckedBorderColor = Color.Transparent
+                    )
                 )
             }
         }
