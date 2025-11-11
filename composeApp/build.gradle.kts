@@ -206,6 +206,10 @@ android {
     buildTypes {
         getByName("release") {
             isMinifyEnabled = true
+            proguardFiles(
+                getDefaultProguardFile("proguard-android-optimize.txt"),
+                "proguard-rules.pro"
+            )
             signingConfig = signingConfigs["release"]
             isDebuggable = false
             setProperty("archivesBaseName", "noiseguard_${project.version}")

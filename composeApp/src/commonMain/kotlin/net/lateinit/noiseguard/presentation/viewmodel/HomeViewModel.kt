@@ -89,6 +89,9 @@ class HomeViewModel(
                 .onSuccess { 
                     classifierInitialized = true 
                     println("NoiseClassifier initialized successfully.")
+                    if (recordingState.value == RecordingState.RECORDING) {
+                        startClassificationIfNeeded()
+                    }
                 }
                 .onFailure { e ->
                     println("NoiseClassifier initialization failed: ${e.message}")

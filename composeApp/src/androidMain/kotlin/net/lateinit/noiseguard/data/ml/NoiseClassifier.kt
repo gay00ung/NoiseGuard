@@ -45,6 +45,7 @@ class NoiseClassifier(
             Log.d("NoiseClassifier", "AudioClassifier initialized successfully.")
         } catch (e: Exception) {
             Log.e("NoiseClassifier", "Failed to initialize AudioClassifier.", e)
+            throw e
         }
     }
 
