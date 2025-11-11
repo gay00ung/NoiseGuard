@@ -140,36 +140,41 @@ private fun NumberWheel(
     LaunchedEffect(listState.isScrollInProgress) {
         if (listState.isScrollInProgress) {
             isUserScrolling = true
-        } else {
-            delay(50)
-            val layoutInfo = listState.layoutInfo
-            if (layoutInfo.visibleItemsInfo.isEmpty()) {
-                isUserScrolling = false
-                return@LaunchedEffect
-            }
-
-            val viewportCenter = (layoutInfo.viewportStartOffset + layoutInfo.viewportEndOffset) / 2
-            val nearest = layoutInfo.visibleItemsInfo.minByOrNull { item ->
-                val center = item.offset + item.size / 2
-                abs(center - viewportCenter)
-            } ?: run {
-                isUserScrolling = false
-                return@LaunchedEffect
-            }
-
-            val centerIndex = nearest.index
-            val snappedValue = values.getOrNull(centerIndex) ?: run {
-                isUserScrolling = false
-                return@LaunchedEffect
-            }
-
-            if (snappedValue != value) {
-                onValueSelected(snappedValue)
-                delay(100)
-            }
-
-            isUserScrolling = false
+            return@LaunchedEffect
         }
+        if (!isUserScrolling) {
+            // Ignore settle events that weren't triggered by user interaction
+            return@LaunchedEffect
+        }
+
+        delay(50)
+        val layoutInfo = listState.layoutInfo
+        if (layoutInfo.visibleItemsInfo.isEmpty()) {
+            isUserScrolling = false
+            return@LaunchedEffect
+        }
+
+        val viewportCenter = (layoutInfo.viewportStartOffset + layoutInfo.viewportEndOffset) / 2
+        val nearest = layoutInfo.visibleItemsInfo.minByOrNull { item ->
+            val center = item.offset + item.size / 2
+            abs(center - viewportCenter)
+        } ?: run {
+            isUserScrolling = false
+            return@LaunchedEffect
+        }
+
+        val centerIndex = nearest.index
+        val snappedValue = values.getOrNull(centerIndex) ?: run {
+            isUserScrolling = false
+            return@LaunchedEffect
+        }
+
+        if (snappedValue != value) {
+            onValueSelected(snappedValue)
+            delay(100)
+        }
+
+        isUserScrolling = false
     }
 
     Box(

@@ -30,6 +30,7 @@ import net.lateinit.noiseguard.data.ml.NoiseClassifierApi
 import net.lateinit.noiseguard.data.ml.ClassifiedLabel
 import net.lateinit.noiseguard.domain.label.LabelLocalizer
 import net.lateinit.noiseguard.notification.LiveUpdateController
+import kotlin.math.ceil
 
 class HomeViewModel(
     private val permissionHandler: PermissionHandler,
@@ -211,15 +212,32 @@ class HomeViewModel(
         }
 
         val job = viewModelScope.launch {
+            val stopAt = getCurrentTimeMillis() + totalSeconds * 1000
             liveUpdateController.start(totalSeconds)
-            var remaining = totalSeconds
-            _countdownSeconds.value = remaining
-            while (remaining > 0 && isActive) {
-                delay(1_000L)
-                remaining--
-                _countdownSeconds.value = remaining
-                liveUpdateController.update(remaining, displayDecibel(currentDecibel.value))
+            _countdownSeconds.value = totalSeconds
+            liveUpdateController.update(
+                totalSeconds,
+                displayDecibel(currentDecibel.value)
+            )
+
+            var lastReported = totalSeconds
+            while (isActive) {
+                val remainingMillis = (stopAt - getCurrentTimeMillis()).coerceAtLeast(0)
+                val remainingSeconds = ceil(remainingMillis / 1000.0).toLong()
+
+                if (remainingSeconds != lastReported) {
+                    lastReported = remainingSeconds
+                    _countdownSeconds.value = remainingSeconds.takeIf { it >= 0 }
+                    liveUpdateController.update(
+                        remainingSeconds.coerceAtLeast(0),
+                        displayDecibel(currentDecibel.value)
+                    )
+                }
+
+                if (remainingMillis <= 0) break
+                delay(250L)
             }
+
             if (!isActive) return@launch
             liveUpdateController.complete()
             _countdownSeconds.value = null

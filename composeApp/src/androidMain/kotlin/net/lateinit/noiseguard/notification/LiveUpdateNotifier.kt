@@ -101,7 +101,7 @@ class LiveUpdateNotifier(private val context: Context) {
             builder
                 .setUsesChronometer(true)
                 .setChronometerCountDown(true)
-                .setWhen(System.currentTimeMillis() + countdownMillis)
+                .setWhen(System.currentTimeMillis() + countdownMillis + 1_000)
         }
 
         return builder
