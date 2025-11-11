@@ -23,3 +23,5 @@ iosApp/Configuration/Config.xcconfig
 # CocoaPods
 iosApp/Pods/
 iosApp/Podfile.lock
+/composeApp/android-key.keystore
+/keystore.properties

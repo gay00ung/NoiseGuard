@@ -15,4 +15,5 @@ allprojects {
         maven { url = uri("https://jitpack.io") }
         maven { url = uri("https://maven.pkg.jetbrains.space/public/p/compose/dev") }
     }
+    version = "1.0.0"
 }
