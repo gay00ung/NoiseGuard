@@ -1,0 +1,14 @@
+-keep class com.google.mediapipe.** { *; }
+-keep class com.google.mediapipe.tasks.** { *; }
+-keep class org.tensorflow.lite.** { *; }
+-keep class com.google.protobuf.** { *; }
+-keep class com.google.flogger.** { *; }
+-keep class com.google.common.** { *; }
+-keep class net.lateinit.noiseguard.data.ml.** { *; }
+-keep class net.lateinit.noiseguard.domain.label.** { *; }
+-keep class net.lateinit.noiseguard.presentation.viewmodel.HomeViewModel { *; }
+-dontwarn com.google.mediapipe.**
+-dontwarn org.tensorflow.lite.**
+-dontwarn com.google.protobuf.**
+-dontwarn com.google.flogger.**
+-dontwarn com.google.common.**

@@ -28,4 +28,5 @@ dependencyResolutionManagement {
     }
 }
 
+rootProject.name = "NoiseGuard"
 include(":composeApp")

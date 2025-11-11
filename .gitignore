@@ -16,3 +16,12 @@ captures
 !*.xcodeproj/project.xcworkspace/
 !*.xcworkspace/contents.xcworkspacedata
 **/xcshareddata/WorkspaceSettings.xcsettings
+
+# iOS Configuration files with sensitive data
+iosApp/Configuration/Config.xcconfig
+
+# CocoaPods
+iosApp/Pods/
+iosApp/Podfile.lock
+/composeApp/android-key.keystore
+/keystore.properties

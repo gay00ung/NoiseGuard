@@ -1,0 +1,522 @@
+﻿index,en,ko
+0,Speech,말
+1,"Child speech, kid speaking","아이 말, 아이 목소리"
+2,Conversation,대화
+3,"Narration, monologue","나레이션, 독백"
+4,Babbling,옹알이
+5,Speech synthesizer,음성 합성기
+6,Shout,외침
+7,Bellow,고함
+8,Whoop,함성
+9,Yell,소리치기
+10,Children shouting,아이들 외침
+11,Screaming,비명
+12,Whispering,속삭임
+13,Laughter,웃음
+14,Baby laughter,아기 웃음
+15,Giggle,킥킥거리는 웃음
+16,Snicker,낄낄거리는 웃음
+17,Belly laugh,배꼽 빠지는 웃음
+18,"Chuckle, chortle","빙그레 웃음, 킬킬 웃음"
+19,"Crying, sobbing","울음, 흐느낌"
+20,"Baby cry, infant cry","아기 울음, 유아 울음"
+21,Whimper,낑낑거리는 소리
+22,"Wail, moan","통곡, 신음"
+23,Sigh,한숨
+24,Singing,노래
+25,Choir,합창단
+26,Yodeling,요들
+27,Chant,성가
+28,Mantra,만트라
+29,Child singing,어린이 노래
+30,Synthetic singing,인공적인 노래
+31,Rapping,랩
+32,Humming,허밍
+33,Groan,신음
+34,Grunt,끙끙거리는 소리
+35,Whistling,휘파람
+36,Breathing,숨쉬기
+37,Wheeze,천명
+38,Snoring,코골이
+39,Gasp,헐떡임
+40,Pant,숨가쁨
+41,Snort,코웃음
+42,Cough,기침
+43,Throat clearing,목청 가다듬기
+44,Sneeze,재채기
+45,Sniff,코 훌쩍이기
+46,Run,달리기
+47,Shuffle,발을 끄는 소리
+48,"Walk, footsteps","걷기, 발소리"
+49,"Chewing, mastication","씹기, 저작"
+50,Biting,깨물기
+51,Gargling,가글
+52,Stomach rumble,배에서 나는 소리
+53,"Burping, eructation",트림
+54,Hiccup,딸꾹질
+55,Fart,방귀
+56,Hands,손
+57,Finger snapping,손가락 튕기기
+58,Clapping,박수
+59,"Heart sounds, heartbeat","심장 소리, 심장 박동"
+60,Heart murmur,심잡음
+61,Cheering,환호
+62,Applause,박수 갈채
+63,Chatter,수다
+64,Crowd,군중
+65,"Hubbub, speech noise, speech babble","웅성거림, 말소리, 왁자지껄한 소리"
+66,Children playing,아이들 노는 소리
+67,Animal,동물
+68,"Domestic animals, pets","가축, 애완동물"
+69,Dog,개
+70,Bark,짖는 소리
+71,Yip,깽깽거리는 소리
+72,Howl,하울링
+73,Bow-wow,멍멍
+74,Growling,으르렁거리는 소리
+75,Whimper (dog),낑낑거리는 소리 (개)
+76,Cat,고양이
+77,Purr,가르랑거리는 소리
+78,Meow,야옹
+79,Hiss,히스
+80,Caterwaul,고양이 울음 소리
+81,"Livestock, farm animals, working animals","가축, 농장 동물, 일하는 동물"
+82,Horse,말
+83,Clip-clop,따그닥따그닥
+84,"Neigh, whinny","히힝, 울음소리"
+85,"Cattle, bovinae","소, 소과 동물"
+86,Moo,음매
+87,Cowbell,소 방울
+88,Pig,돼지
+89,Oink,꿀꿀
+90,Goat,염소
+91,Bleat,매애
+92,Sheep,양
+93,Fowl,가금류
+94,"Chicken, rooster","닭, 수탉"
+95,Cluck,꼬꼬댁
+96,"Crowing, cock-a-doodle-doo","닭 울음소리, 꼬끼오"
+97,Turkey,칠면조
+98,Gobble,골골거리는 소리
+99,Duck,오리
+100,Quack,꽥꽥
+101,Goose,거위
+102,Honk,거위 울음소리
+103,Wild animals,야생 동물
+104,"Roaring cats (lions, tigers)","포효하는 고양이과 동물 (사자, 호랑이)"
+105,Roar,포효
+106,Bird,새
+107,"Bird vocalization, bird call, bird song","새 울음소리, 새소리"
+108,"Chirp, tweet","지저귐, 짹짹"
+109,Squawk,꽥꽥거리는 소리
+110,"Pigeon, dove",비둘기
+111,Coo,구구
+112,Crow,까마귀
+113,Caw,까악까악
+114,Owl,부엉이
+115,Hoot,부엉부엉
+116,"Bird flight, flapping wings","새 비행, 날갯짓"
+117,"Canidae, dogs, wolves","갯과, 개, 늑대"
+118,"Rodents, rats, mice","설치류, 쥐"
+119,Mouse,생쥐
+120,Patter,타닥타닥 소리
+121,Insect,곤충
+122,Cricket,귀뚜라미
+123,Mosquito,모기
+124,"Fly, housefly",파리
+125,Buzz,윙윙거리는 소리
+126,"Bee, wasp, etc.","벌, 말벌 등"
+127,Frog,개구리
+128,Croak,개골개골
+129,Snake,뱀
+130,Rattle,방울뱀 소리
+131,Whale vocalization,고래 울음소리
+132,Music,음악
+133,Musical instrument,악기
+134,Plucked string instrument,발현악기
+135,Guitar,기타
+136,Electric guitar,일렉트릭 기타
+137,Bass guitar,베이스 기타
+138,Acoustic guitar,어쿠스틱 기타
+139,"Steel guitar, slide guitar","스틸 기타, 슬라이드 기타"
+140,Tapping (guitar technique),태핑 (기타 주법)
+141,Strum,스트럼
+142,Banjo,밴조
+143,Sitar,시타르
+144,Mandolin,만돌린
+145,Zither,치터
+146,Ukulele,우쿨렐레
+147,Keyboard (musical),건반 악기
+148,Piano,피아노
+149,Electric piano,전자 피아노
+150,Organ,오르간
+151,Electronic organ,전자 오르간
+152,Hammond organ,해먼드 오르간
+153,Synthesizer,신디사이저
+154,Sampler,샘플러
+155,Harpsichord,하프시코드
+156,Percussion,타악기
+157,Drum kit,드럼 키트
+158,Drum machine,드럼 머신
+159,Drum,드럼
+160,Snare drum,스네어 드럼
+161,Rimshot,림샷
+162,Drum roll,드럼 롤
+163,Bass drum,베이스 드럼
+164,Timpani,팀파니
+165,Tabla,타블라
+166,Cymbal,심벌즈
+167,Hi-hat,하이햇
+168,Wood block,우드 블록
+169,Tambourine,탬버린
+170,Rattle (instrument),래틀 (악기)
+171,Maraca,마라카스
+172,Gong,징
+173,Tubular bells,관현악 벨
+174,Mallet percussion,말렛 타악기
+175,"Marimba, xylophone","마림바, 실로폰"
+176,Glockenspiel,글로켄슈필
+177,Vibraphone,비브라폰
+178,Steelpan,스틸팬
+179,Orchestra,오케스트라
+180,Brass instrument,금관악기
+181,French horn,프렌치 호른
+182,Trumpet,트럼펫
+183,Trombone,트롬본
+184,Bowed string instrument,찰현악기
+185,String section,현악 섹션
+186,"Violin, fiddle","바이올린, 피들"
+187,Pizzicato,피치카토
+188,Cello,첼로
+189,Double bass,더블 베이스
+190,"Wind instrument, woodwind instrument","관악기, 목관악기"
+191,Flute,플루트
+192,Saxophone,색소폰
+193,Clarinet,클라리넷
+194,Harp,하프
+195,Bell,벨
+196,Church bell,교회 종
+197,Jingle bell,징글벨
+198,Bicycle bell,자전거 벨
+199,Tuning fork,튜닝 포크
+200,Chime,차임
+201,Wind chime,풍경
+202,Change ringing (campanology),체인지 링잉 (교회 종 연주)
+203,Harmonica,하모니카
+204,Accordion,아코디언
+205,Bagpipes,백파이프
+206,Didgeridoo,디저리두
+207,Shofar,쇼파르
+208,Theremin,테레민
+209,Singing bowl,싱잉볼
+210,Scratching (performance technique),스크래칭 (연주 기법)
+211,Pop music,팝 음악
+212,Hip hop music,힙합 음악
+213,Beatboxing,비트박스
+214,Rock music,록 음악
+215,Heavy metal,헤비메탈
+216,Punk rock,펑크 록
+217,Grunge,그런지
+218,Progressive rock,프로그레시브 록
+219,Rock and roll,로큰롤
+220,Psychedelic rock,사이키델릭 록
+221,Rhythm and blues,리듬 앤 블루스
+222,Soul music,소울 음악
+223,Reggae,레게
+224,Country,컨트리 음악
+225,Swing music,스윙 음악
+226,Bluegrass,블루그래스
+227,Funk,펑크
+228,Folk music,포크 음악
+229,Middle Eastern music,중동 음악
+230,Jazz,재즈
+231,Disco,디스코
+232,Classical music,클래식 음악
+233,Opera,오페라
+234,Electronic music,전자 음악
+235,House music,하우스 음악
+236,Techno,테크노
+237,Dubstep,덥스텝
+238,Drum and bass,드럼 앤 베이스
+239,Electronica,일렉트로니카
+240,Electronic dance music,일렉트로닉 댄스 뮤직
+241,Ambient music,앰비언트 음악
+242,Trance music,트랜스 음악
+243,Music of Latin America,라틴 아메리카 음악
+244,Salsa music,살사 음악
+245,Flamenco,플라멩코
+246,Blues,블루스
+247,Music for children,어린이 음악
+248,New-age music,뉴에이지 음악
+249,Vocal music,성악
+250,A capella,아카펠라
+251,Music of Africa,아프리카 음악
+252,Afrobeat,아프로비트
+253,Christian music,기독교 음악
+254,Gospel music,가스펠 음악
+255,Music of Asia,아시아 음악
+256,Carnatic music,카르나틱 음악
+257,Music of Bollywood,볼리우드 음악
+258,Ska,스카
+259,Traditional music,전통 음악
+260,Independent music,인디 음악
+261,Song,노래
+262,Background music,배경 음악
+263,Theme music,테마 음악
+264,Jingle (music),징글 (음악)
+265,Soundtrack music,사운드트랙 음악
+266,Lullaby,자장가
+267,Video game music,비디오 게임 음악
+268,Christmas music,크리스마스 음악
+269,Dance music,댄스 음악
+270,Wedding music,결혼식 음악
+271,Happy music,행복한 음악
+272,Sad music,슬픈 음악
+273,Tender music,부드러운 음악
+274,Exciting music,신나는 음악
+275,Angry music,화난 음악
+276,Scary music,무서운 음악
+277,Wind,바람
+278,Rustling leaves,나뭇잎 바스락거리는 소리
+279,Wind noise (microphone),바람 소리 (마이크)
+280,Thunderstorm,뇌우
+281,Thunder,천둥
+282,Water,물
+283,Rain,비
+284,Raindrop,빗방울
+285,Rain on surface,표면에 내리는 비
+286,Stream,시냇물
+287,Waterfall,폭포
+288,Ocean,바다
+289,"Waves, surf","파도, 파도타기"
+290,Steam,증기
+291,Gurgling,콸콸 흐르는 소리
+292,Fire,불
+293,Crackle,타닥타닥 소리
+294,Vehicle,차량
+295,"Boat, Water vehicle","보트, 수상 차량"
+296,"Sailboat, sailing ship","범선, 항해선"
+297,"Rowboat, canoe, kayak","노 젓는 배, 카누, 카약"
+298,"Motorboat, speedboat","모터보트, 쾌속정"
+299,Ship,배
+300,Motor vehicle (road),자동차 (도로)
+301,Car,자동차
+302,"Vehicle horn, car horn, honking","차량 경적, 자동차 경적, 경적 울림"
+303,Toot,빵빵
+304,Car alarm,자동차 경보
+305,"Power windows, electric windows","파워 윈도우, 전동 윈도우"
+306,Skidding,스키드
+307,Tire squeal,타이어 끽하는 소리
+308,Car passing by,지나가는 자동차
+309,"Race car, auto racing","경주용 자동차, 자동차 경주"
+310,Truck,트럭
+311,Air brake,에어 브레이크
+312,"Air horn, truck horn","에어 혼, 트럭 경적"
+313,Reversing beeps,후진 경고음
+314,"Ice cream truck, ice cream van",아이스크림 트럭
+315,Bus,버스
+316,Emergency vehicle,긴급 차량
+317,Police car (siren),경찰차 (사이렌)
+318,Ambulance (siren),구급차 (사이렌)
+319,"Fire engine, fire truck (siren)",소방차 (사이렌)
+320,Motorcycle,오토바이
+321,"Traffic noise, roadway noise","교통 소음, 도로 소음"
+322,Rail transport,철도 운송
+323,Train,기차
+324,Train whistle,기차 기적
+325,Train horn,기차 경적
+326,"Railroad car, train wagon","철도 차량, 기차 객차"
+327,Train wheels squealing,기차 바퀴 끽하는 소리
+328,"Subway, metro, underground",지하철
+329,Aircraft,항공기
+330,Aircraft engine,항공기 엔진
+331,Jet engine,제트 엔진
+332,"Propeller, airscrew",프로펠러
+333,Helicopter,헬리콥터
+334,"Fixed-wing aircraft, airplane","고정익 항공기, 비행기"
+335,Bicycle,자전거
+336,Skateboard,스케이트보드
+337,Engine,엔진
+338,Light engine (high frequency),경량 엔진 (고주파)
+339,"Dental drill, dentist's drill",치과 드릴
+340,Lawn mower,잔디 깎는 기계
+341,Chainsaw,전기톱
+342,Medium engine (mid frequency),중형 엔진 (중주파)
+343,Heavy engine (low frequency),대형 엔진 (저주파)
+344,Engine knocking,엔진 노킹
+345,Engine starting,엔진 시동
+346,Idling,공회전
+347,"Accelerating, revving, vroom","가속, 엔진 회전 수 높이기, 부릉"
+348,Door,문
+349,Doorbell,초인종
+350,Ding-dong,딩동
+351,Sliding door,미닫이문
+352,Slam,쾅 닫는 소리
+353,Knock,노크
+354,Tap,똑똑 두드리는 소리
+355,Squeak,삐걱거리는 소리
+356,Cupboard open or close,찬장 여닫는 소리
+357,Drawer open or close,서랍 여닫는 소리
+358,"Dishes, pots, and pans","접시, 냄비, 프라이팬"
+359,"Cutlery, silverware",식기류
+360,Chopping (food),다지기 (음식)
+361,Frying (food),튀기기 (음식)
+362,Microwave oven,전자레인지
+363,Blender,블렌더
+364,"Water tap, faucet",수도꼭지
+365,Sink (filling or washing),싱크대 (물 채우거나 씻기)
+366,Bathtub (filling or washing),욕조 (물 채우거나 씻기)
+367,Hair dryer,헤어 드라이어
+368,Toilet flush,화장실 물 내리는 소리
+369,Toothbrush,칫솔
+370,Electric toothbrush,전동 칫솔
+371,Vacuum cleaner,진공 청소기
+372,Zipper (clothing),지퍼 (의류)
+373,Keys jangling,열쇠 짤랑거리는 소리
+374,Coin (dropping),동전 (떨어뜨리기)
+375,Scissors,가위
+376,"Electric shaver, electric razor",전기 면도기
+377,Shuffling cards,카드 섞는 소리
+378,Typing,타이핑
+379,Typewriter,타자기
+380,Computer keyboard,컴퓨터 키보드
+381,Writing,글쓰기
+382,Alarm,알람
+383,Telephone,전화
+384,Telephone bell ringing,전화벨 소리
+385,Ringtone,벨소리
+386,"Telephone dialing, DTMF","전화 다이얼링, DTMF"
+387,Dial tone,발신음
+388,Busy signal,통화 중 신호
+389,Alarm clock,자명종
+390,Siren,사이렌
+391,Civil defense siren,민방위 사이렌
+392,Buzzer,부저
+393,"Smoke detector, smoke alarm",연기 감지기
+394,Fire alarm,화재 경보기
+395,Foghorn,무적
+396,Whistle,휘파람
+397,Steam whistle,증기 기적
+398,Mechanisms,메커니즘
+399,"Ratchet, pawl","래칫, 폴"
+400,Clock,시계
+401,Tick,똑딱
+402,Tick-tock,똑딱똑딱
+403,Gears,기어
+404,Pulleys,도르래
+405,Sewing machine,재봉틀
+406,Mechanical fan,기계식 선풍기
+407,Air conditioning,에어컨
+408,Cash register,금전 등록기
+409,Printer,프린터
+410,Camera,카메라
+411,Single-lens reflex camera,일안 반사식 카메라
+412,Tools,도구
+413,Hammer,망치
+414,Jackhammer,착암기
+415,Sawing,톱질
+416,Filing (rasp),줄질
+417,Sanding,사포질
+418,Power tool,전동 공구
+419,Drill,드릴
+420,Explosion,폭발
+421,"Gunshot, gunfire","총성, 총격"
+422,Machine gun,기관총
+423,Fusillade,집중 사격
+424,Artillery fire,포격
+425,Cap gun,장난감 총
+426,Fireworks,불꽃놀이
+427,Firecracker,폭죽
+428,"Burst, pop","터지는 소리, 펑"
+429,Eruption,분출
+430,Boom,붐
+431,Wood,나무
+432,Chop,찍는 소리
+433,Splinter,파편
+434,Crack,균열
+435,Glass,유리
+436,"Chink, clink","쨍그랑, 땡그랑"
+437,Shatter,산산조각
+438,Liquid,액체
+439,"Splash, splatter","첨벙, 튀는 소리"
+440,Slosh,철벅
+441,Squish,질퍽
+442,Drip,뚝뚝 떨어지는 소리
+443,Pour,붓는 소리
+444,"Trickle, dribble",졸졸 흐르는 소리
+445,Gush,분출
+446,Fill (with liquid),채우기 (액체로)
+447,Spray,스프레이
+448,Pump (liquid),펌프 (액체)
+449,Stir,젓기
+450,Boiling,끓는 소리
+451,Sonar,소나
+452,Arrow,화살
+453,"Whoosh, swoosh, swish","휙, 쉭"
+454,"Thump, thud","쿵, 퍽"
+455,Thunk,쿵
+456,Electronic tuner,전자 튜너
+457,Effects unit,이펙트 유닛
+458,Chorus effect,코러스 이펙트
+459,Basketball bounce,농구공 튀는 소리
+460,Bang,쾅
+461,"Slap, smack","찰싹 때리기, 철썩 때리기"
+462,"Whack, thwack",세게 때리기
+463,"Smash, crash","부수기, 충돌"
+464,Breaking,깨기
+465,Bouncing,튀기
+466,Whip,채찍
+467,Flap,펄럭임
+468,Scratch,긁기
+469,Scrape,긁는 소리
+470,Rub,문지르기
+471,Roll,굴리기
+472,Crushing,으깨기
+473,"Crumpling, crinkling","구겨짐, 바삭거림"
+474,Tearing,찢기
+475,"Beep, bleep","삐, 삑"
+476,Ping,핑
+477,Ding,딩
+478,Clang,쨍그랑
+479,Squeal,꽥
+480,Creak,삐걱거리는 소리
+481,Rustle,바스락거리는 소리
+482,Whir,윙윙거리는 소리
+483,Clatter,달그락거리는 소리
+484,Sizzle,지글지글
+485,Clicking,딸깍거리는 소리
+486,Clickety-clack,딸깍딸깍
+487,Rumble,우르르
+488,Plop,풍덩
+489,"Jingle, tinkle","짤랑짤랑, 딸랑딸랑"
+490,Hum,험
+491,Zing,쌩
+492,Boing,보잉
+493,Crunch,바삭
+494,Silence,침묵
+495,Sine wave,사인파
+496,Harmonic,고조파
+497,Chirp tone,처프 톤
+498,Sound effect,음향 효과
+499,Pulse,펄스
+500,"Inside, small room","실내, 작은 방"
+501,"Inside, large room or hall","실내, 큰 방 또는 홀"
+502,"Inside, public space","실내, 공공 장소"
+503,"Outside, urban or manmade","실외, 도시 또는 인공"
+504,"Outside, rural or natural","실외, 시골 또는 자연"
+505,Reverberation,잔향
+506,Echo,메아리
+507,Noise,소음
+508,Environmental noise,환경 소음
+509,Static,정적
+510,Mains hum,전원 험
+511,Distortion,왜곡
+512,Sidetone,측음
+513,Cacophony,불협화음
+514,White noise,백색 소음
+515,Pink noise,핑크 소음
+516,Throbbing,두근거리는 소리
+517,Vibration,진동
+518,Television,텔레비전
+519,Radio,라디오
+520,Field recording,현장 녹음
