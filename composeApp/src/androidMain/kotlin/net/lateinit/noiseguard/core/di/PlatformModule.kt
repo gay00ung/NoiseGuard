@@ -5,6 +5,9 @@ import net.lateinit.noiseguard.data.ml.NoiseClassifierApi
 import net.lateinit.noiseguard.domain.label.AndroidLabelLocalizer
 import net.lateinit.noiseguard.domain.label.LabelLocalizer
 import net.lateinit.noiseguard.domain.permission.PermissionHandler
+import net.lateinit.noiseguard.notification.AndroidLiveUpdateController
+import net.lateinit.noiseguard.notification.LiveUpdateController
+import net.lateinit.noiseguard.notification.LiveUpdateNotifier
 import org.koin.android.ext.koin.androidContext
 import org.koin.dsl.module
 
@@ -20,4 +23,7 @@ val androidPlatformModule = module {
 
     // Label localizer (KO CSV)
     single<LabelLocalizer> { AndroidLabelLocalizer(androidContext()) }
+
+    single { LiveUpdateNotifier(androidContext()) }
+    single<LiveUpdateController> { AndroidLiveUpdateController(get()) }
 }

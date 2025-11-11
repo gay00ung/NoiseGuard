@@ -3,6 +3,8 @@ package net.lateinit.noiseguard.core.di
 import net.lateinit.noiseguard.data.ml.NoiseClassifierApi
 import net.lateinit.noiseguard.data.ml.NoopNoiseClassifier
 import net.lateinit.noiseguard.domain.permission.PermissionHandler
+import net.lateinit.noiseguard.notification.LiveUpdateController
+import net.lateinit.noiseguard.notification.NoopLiveUpdateController
 import org.koin.dsl.module
 
 /**
@@ -14,4 +16,7 @@ val wasmJsPlatformModule = module {
 
     // Web: No-op 분류기 바인딩
     single<NoiseClassifierApi> { NoopNoiseClassifier() }
+
+    // Web likewise does nothing for live updates
+    single<LiveUpdateController> { NoopLiveUpdateController }
 }

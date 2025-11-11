@@ -5,6 +5,8 @@ import net.lateinit.noiseguard.data.ml.IOSNoiseClassifier
 import net.lateinit.noiseguard.domain.permission.PermissionHandler
 import net.lateinit.noiseguard.domain.label.LabelLocalizer
 import net.lateinit.noiseguard.domain.label.IOSLabelLocalizer
+import net.lateinit.noiseguard.notification.LiveUpdateController
+import net.lateinit.noiseguard.notification.NoopLiveUpdateController
 import org.koin.dsl.module
 
 /**
@@ -18,4 +20,7 @@ val iosPlatformModule = module {
     single<NoiseClassifierApi> { IOSNoiseClassifier() }
     // Label localizer for KO CSV from bundle
     single<LabelLocalizer> { IOSLabelLocalizer() }
+
+    // iOS는 알림 라이브 업데이트가 없으므로 No-op 제공
+    single<LiveUpdateController> { NoopLiveUpdateController }
 }

@@ -15,6 +15,7 @@ import kotlinx.coroutines.flow.onEach
 import kotlinx.coroutines.flow.stateIn
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.delay
+import kotlinx.coroutines.isActive
 import kotlinx.coroutines.withContext
 import kotlinx.coroutines.withTimeout
 import net.lateinit.noiseguard.core.util.getCurrentTimeMillis
@@ -28,12 +29,14 @@ import net.lateinit.noiseguard.domain.usecase.ClassifyNoiseTypeUseCase
 import net.lateinit.noiseguard.data.ml.NoiseClassifierApi
 import net.lateinit.noiseguard.data.ml.ClassifiedLabel
 import net.lateinit.noiseguard.domain.label.LabelLocalizer
+import net.lateinit.noiseguard.notification.LiveUpdateController
 
 class HomeViewModel(
     private val permissionHandler: PermissionHandler,
     private val noiseClassifier: NoiseClassifierApi,
     private val classifyNoiseType: ClassifyNoiseTypeUseCase,
-    private val labelLocalizer: LabelLocalizer
+    private val labelLocalizer: LabelLocalizer,
+    private val liveUpdateController: LiveUpdateController
 ) : ViewModel() {
     private val audioRecorder = AudioRecorderFactory.createAudioRecorder()
     
@@ -69,6 +72,9 @@ class HomeViewModel(
 
     private val _baselineCalibrationState = MutableStateFlow<BaselineCalibrationState>(BaselineCalibrationState.Idle)
     val baselineCalibrationState: StateFlow<BaselineCalibrationState> = _baselineCalibrationState
+
+    private val _countdownSeconds = MutableStateFlow<Long?>(null)
+    val countdownSeconds: StateFlow<Long?> = _countdownSeconds
 
     private var classifierInitialized = false
     private var classificationRunning = false
@@ -188,19 +194,63 @@ class HomeViewModel(
     
     private fun scheduleAutoStopIfNeeded() {
         autoStopJob?.cancel()
-        if (!CalibrationConfig.autoTimerEnabled.value) return
-        val totalSeconds = CalibrationConfig.autoTimerMin.value * 60 + CalibrationConfig.autoTimerSec.value
-        if (totalSeconds <= 0L) return
-        autoStopJob = viewModelScope.launch {
-            delay(totalSeconds * 1000L)
-            audioRecorder.stopRecording()
-            autoStopJob = null
+        if (!CalibrationConfig.autoTimerEnabled.value) {
+            _countdownSeconds.value = null
+            liveUpdateController.cancel()
+            return
         }
+
+        val totalSeconds = CalibrationConfig.autoTimerMin.value * 60 + CalibrationConfig.autoTimerSec.value
+        if (totalSeconds <= 0L) {
+            _countdownSeconds.value = null
+            liveUpdateController.cancel()
+            return
+        }
+
+        val job = viewModelScope.launch {
+            liveUpdateController.start(totalSeconds)
+            var remaining = totalSeconds
+            _countdownSeconds.value = remaining
+            while (remaining > 0 && isActive) {
+                delay(1_000L)
+                remaining--
+                _countdownSeconds.value = remaining
+                liveUpdateController.update(remaining, displayDecibel(currentDecibel.value))
+            }
+            if (!isActive) return@launch
+            liveUpdateController.complete()
+            _countdownSeconds.value = null
+            audioRecorder.stopRecording()
+        }
+
+        job.invokeOnCompletion { cause ->
+            if (cause != null) {
+                liveUpdateController.cancel()
+            }
+            _countdownSeconds.value = null
+            if (autoStopJob === job) {
+                autoStopJob = null
+            }
+        }
+
+        autoStopJob = job
     }
 
     private fun cancelAutoStopJob() {
         autoStopJob?.cancel()
         autoStopJob = null
+        _countdownSeconds.value = null
+        liveUpdateController.cancel()
+    }
+
+    private fun displayDecibel(rawDb: Float): Float {
+        val baseline = CalibrationConfig.baselineDb.value
+        val useRelative = CalibrationConfig.relativeDisplay.value
+        return if (useRelative && baseline != null) {
+            (rawDb - baseline).coerceAtLeast(0f)
+        } else {
+            rawDb
+        }
     }
 
     private fun startClassificationIfNeeded() {

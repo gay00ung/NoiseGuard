@@ -2,6 +2,7 @@ package net.lateinit.noiseguard.core.di
 
 import net.lateinit.noiseguard.domain.usecase.ClassifyNoiseTypeUseCase
 import net.lateinit.noiseguard.presentation.viewmodel.HomeViewModel
+import net.lateinit.noiseguard.notification.LiveUpdateController
 import org.koin.dsl.module
 import net.lateinit.noiseguard.domain.label.LabelLocalizer
 import net.lateinit.noiseguard.domain.label.PassthroughLabelLocalizer
@@ -25,7 +26,7 @@ val domainModule = module {
 
 val presentationModule = module {
     // ViewModels
-    factory { HomeViewModel(get(), get(), get(), get()) }
+    factory { HomeViewModel(get(), get(), get(), get(), get<LiveUpdateController>()) }
     // factoryOf(::RecordingViewModel)
     // factoryOf(::HistoryViewModel)
     // factoryOf(::AnalysisViewModel)
