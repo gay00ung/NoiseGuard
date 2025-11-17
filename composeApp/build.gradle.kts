@@ -109,7 +109,7 @@ kotlin {
             implementation(libs.androidx.work.runtime.ktx)
 
             // Ads
-            implementation(libs.play.services.ads)
+//            implementation(libs.play.services.ads)
 
             // Analytics
             implementation(libs.firebase.analytics.ktx)
@@ -187,7 +187,7 @@ android {
         minSdk = libs.versions.android.minSdk.get().toInt()
         //noinspection OldTargetApi
         targetSdk = libs.versions.android.targetSdk.get().toInt()
-        versionCode = 1
+        versionCode = 2
         versionName = "1.0.0"
     }
     packaging {
