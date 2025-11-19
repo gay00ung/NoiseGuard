@@ -32,7 +32,7 @@ kotlin {
             jvmTarget.set(JvmTarget.JVM_11)
         }
     }
-    
+
     listOf(
         iosX64(),
         iosArm64(),
@@ -48,7 +48,7 @@ kotlin {
     compilerOptions {
         freeCompilerArgs.add("-Xexpect-actual-classes")
     }
-    
+
     @OptIn(ExperimentalWasmDsl::class)
     wasmJs {
         moduleName = "composeApp"
@@ -68,7 +68,7 @@ kotlin {
         }
         binaries.executable()
     }
-    
+
     sourceSets {
         androidMain.dependencies {
             implementation(compose.preview)
@@ -187,8 +187,15 @@ android {
         minSdk = libs.versions.android.minSdk.get().toInt()
         //noinspection OldTargetApi
         targetSdk = libs.versions.android.targetSdk.get().toInt()
-        versionCode = 2
+        versionCode = 5
         versionName = "1.0.0"
+    }
+    // AD_ID 관련 모듈 전역 제외
+    configurations.all {
+        exclude(group = "com.google.android.gms", module = "play-services-ads-identifier")
+        exclude(group = "com.google.android.gms", module = "play-services-measurement-sdk")
+        exclude(group = "androidx.privacysandbox.ads", module = "ads-adservices")
+        exclude(group = "androidx.privacysandbox.ads", module = "ads-adservices-java")
     }
     packaging {
         resources {
