@@ -42,10 +42,11 @@ class HomeViewModel(
     private val audioRecorder = AudioRecorderFactory.createAudioRecorder()
     
     // 실시간 데시벨 Flow를 StateFlow로 변환
+    // Eagerly: 백그라운드 타이머 동작 시에도 실시간 데시벨 업데이트 보장
     val currentDecibel: StateFlow<Float> = audioRecorder.decibelFlow
         .stateIn(
             scope = viewModelScope,
-            started = SharingStarted.WhileSubscribed(5000),
+            started = SharingStarted.Eagerly,
             initialValue = 30f
         )
     
@@ -53,10 +54,11 @@ class HomeViewModel(
     val recordingState: StateFlow<RecordingState> = audioRecorder.recordingState
     
     // 소음 레벨 정보
+    // Eagerly: 백그라운드에서도 평균/최대 데시벨 통계 업데이트 보장
     val noiseLevel: StateFlow<NoiseLevel> = audioRecorder.noiseLevelFlow
         .stateIn(
             scope = viewModelScope,
-            started = SharingStarted.WhileSubscribed(5000),
+            started = SharingStarted.Eagerly,
             initialValue = NoiseLevel(
                 current = 30f,
                 average = 30f,
