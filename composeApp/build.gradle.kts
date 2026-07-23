@@ -185,10 +185,9 @@ android {
     defaultConfig {
         applicationId = "net.lateinit.noiseguard"
         minSdk = libs.versions.android.minSdk.get().toInt()
-        //noinspection OldTargetApi
         targetSdk = libs.versions.android.targetSdk.get().toInt()
-        versionCode = 5
-        versionName = "1.0.0"
+        versionCode = 6
+        versionName = "1.0.1"
     }
     // AD_ID 관련 모듈 전역 제외
     configurations.all {
